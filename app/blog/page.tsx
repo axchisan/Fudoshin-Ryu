@@ -1,3 +1,5 @@
+"use client"  
+
 import { Navbar } from "@/components/navbar"
 import { Footer } from "@/components/footer"
 import { ScrollReveal } from "@/components/scroll-reveal"
@@ -48,7 +50,9 @@ export default function BlogPage() {
         <section className="bg-background py-16 px-4">
           <div className="container mx-auto max-w-6xl">
             <h1 className="text-6xl font-bold mb-4">Blog</h1>
-            <p className="text-xl text-muted-foreground mb-12">Artículos, tips y noticias sobre Shotokan Karate-Do</p>
+            <p className="text-xl text-muted-foreground mb-12">
+              Artículos, tips y noticias sobre Shotokan Karate-Do
+            </p>
 
             <div className="grid gap-12">
               {blogPosts.map((post) => (
@@ -95,9 +99,13 @@ function BlogCard({
               <time>{new Date(post.date).toLocaleDateString("es-CO")}</time>
               <span>Por {post.author}</span>
             </div>
-            <h3 className="text-2xl font-bold mb-3 group-hover:text-red-600 transition">{post.title}</h3>
+            <h3 className="text-2xl font-bold mb-3 group-hover:text-red-600 transition">
+              {post.title}
+            </h3>
             <p className="text-muted-foreground mb-4">{post.excerpt}</p>
-            <div className="text-red-600 font-bold group-hover:translate-x-2 transition inline-block">Leer más →</div>
+            <div className="text-red-600 font-bold group-hover:translate-x-2 transition inline-block">
+              Leer más →
+            </div>
           </div>
         </div>
       </article>
