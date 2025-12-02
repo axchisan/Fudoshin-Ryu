@@ -48,7 +48,7 @@ async function main() {
         sensei_name: "Leonardo Vanegas Martínez",
         phone: "+57 300 123 4567",
         email: process.env.ADMIN_EMAIL || "contacto@fudoshinryu.com",
-        instagram: "https://instagram.com/fudoshinryu",
+        instagram_url: "https://instagram.com/fudoshinryu",
       },
     })
     console.log("[seed] Configuración del sitio creada")
