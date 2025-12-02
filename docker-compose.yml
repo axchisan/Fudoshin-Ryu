@@ -1,0 +1,33 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: fudoshin-app
+    environment:
+      DATABASE_URL: ${DATABASE_URL}
+
+      # Credenciales del admin inicial (seed)
+      ADMIN_EMAIL: ${ADMIN_EMAIL}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+
+      # Configuración general
+      NODE_ENV: ${NODE_ENV:-production}
+      NEXT_PUBLIC_APP_URL: ${NEXT_PUBLIC_APP_URL}
+      JWT_SECRET: ${JWT_SECRET}
+
+      # Opcionales
+      NEXTAUTH_SECRET: ${NEXTAUTH_SECRET}
+      NEXTAUTH_URL: ${NEXTAUTH_URL}
+
+    ports:
+      - "${APP_PORT:-3000}:3000"
+
+    volumes:
+      # Persistir imágenes subidas
+      - ./public/uploads:/app/public/uploads
+
+    restart: unless-stopped
+volumes:

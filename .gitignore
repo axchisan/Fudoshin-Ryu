@@ -1,0 +1,48 @@
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Testing
+coverage/
+
+# Production
+.next/
+out/
+build/
+dist/
+API_DOCUMENTATION.md
+ADMIN-GUIDE.md
+DATABASE_SETUP.md
+DEPLOYMENT.md
+FINAL_SUMMARY.md
+PRODUCTION_CHECKLIST.md
+# Misc
+.DS_Store
+*.pem
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.env
+.env.local
+.env.*.local
+
+
+# Uploads (keep directory structure, but ignore actual files)
+public/uploads/*
+!public/uploads/.gitkeep
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Database
+*.sql
+backup*.sql

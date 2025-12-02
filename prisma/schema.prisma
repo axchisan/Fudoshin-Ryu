@@ -1,0 +1,237 @@
+// Fudoshin Ryu - Karate Dojo Management System
+// PostgreSQL Database Schema with Prisma
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ============================================
+// AUTHENTICATION & ADMIN
+// ============================================
+
+model Admin {
+  id        String     @id @default(cuid())
+  email     String     @unique
+  password  String     // bcrypt hashed
+  name      String
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  
+  // Relations
+  sesiones  AdminSession[]
+  
+  @@map("admins")
+}
+
+model AdminSession {
+  id        String     @id @default(cuid())
+  adminId   String
+  token     String     @unique
+  expiresAt DateTime
+  createdAt DateTime   @default(now())
+  
+  admin     Admin      @relation(fields: [adminId], references: [id], onDelete: Cascade)
+  
+  @@index([adminId])
+  @@map("admin_sessions")
+}
+
+// ============================================
+// SITE CONTENT & SETTINGS
+// ============================================
+
+model SiteSettings {
+  id                String   @id @default(cuid())
+  // Sensei Info
+  sensei_name       String   @default("Leonardo Vanegas Martínez")
+  sensei_bio        String   @default("Maestro de Karate Shotokan con más de 20 años de experiencia")
+  sensei_image_url  String?
+  
+  // Dojo Info
+  dojo_name         String   @default("Fudoshin Ryu")
+  dojo_philosophy   String   @default("Cultivar la fuerza del espíritu, honor en la tradición, disciplina en la práctica")
+  dojo_motto        String   @default("Fuerza • Honor • Disciplina")
+  jka_affiliation   String   @default("Afiliado a Japan Karate Association (JKA)")
+  
+  // Contact
+  phone             String?
+  whatsapp          String?
+  email             String?
+  
+  // Social Media
+  facebook_url      String?
+  instagram_url     String?
+  youtube_url       String?
+  
+  updatedAt DateTime @updatedAt
+  
+  @@map("site_settings")
+}
+
+// ============================================
+// LOCATIONS / SCHEDULE
+// ============================================
+
+model Location {
+  id        String     @id @default(cuid())
+  name      String     // "Vélez", "Barbosa", "Guavatá"
+  address   String
+  latitude  Float?
+  longitude Float?
+  is_main   Boolean    @default(false)
+  
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  
+  // Relations
+  schedules Schedule[]
+  
+  @@map("locations")
+}
+
+model Schedule {
+  id        String     @id @default(cuid())
+  locationId String
+  day_of_week Int      // 0-6 (Sunday-Saturday)
+  start_time String    // "15:00"
+  end_time  String     // "16:30"
+  level     String     // "Principiante", "Intermedio", "Avanzado"
+  description String?
+  
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  
+  location  Location   @relation(fields: [locationId], references: [id], onDelete: Cascade)
+  
+  @@index([locationId])
+  @@map("schedules")
+}
+
+// ============================================
+// BLOG & ARTICLES
+// ============================================
+
+model BlogPost {
+  id        String     @id @default(cuid())
+  title     String
+  slug      String     @unique
+  excerpt   String
+  content   String     // Markdown or HTML
+  image_url String?
+  author    String     @default("Sensei Leonardo Vanegas")
+  
+  published Boolean    @default(false)
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  publishedAt DateTime?
+  
+  // Relations
+  comments  Comment[]
+  
+  @@index([slug])
+  @@index([published])
+  @@map("blog_posts")
+}
+
+model Comment {
+  id        String     @id @default(cuid())
+  postId    String
+  name      String
+  email     String
+  content   String
+  approved  Boolean    @default(false)
+  
+  createdAt DateTime   @default(now())
+  
+  post      BlogPost   @relation(fields: [postId], references: [id], onDelete: Cascade)
+  
+  @@index([postId])
+  @@map("comments")
+}
+
+// ============================================
+// GALLERY & MEDIA
+// ============================================
+
+model GalleryImage {
+  id        String     @id @default(cuid())
+  title     String
+  image_url String     // URL to uploaded image on server
+  thumbnail_url String?
+  description String?
+  category  String?    // "Clases", "Torneos", "Graduaciones", "Eventos"
+  
+  order     Int        @default(0)
+  published Boolean    @default(true)
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  
+  @@index([published])
+  @@index([category])
+  @@map("gallery_images")
+}
+
+// ============================================
+// TESTIMONIALS
+// ============================================
+
+model Testimonial {
+  id        String     @id @default(cuid())
+  name      String
+  level     String     // "Principiante", "Kyu", "Dan", etc.
+  rating    Int        @default(5) // 1-5 stars
+  content   String
+  image_url String?
+  
+  approved  Boolean    @default(false)
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  
+  @@map("testimonials")
+}
+
+// ============================================
+// CONTACT MESSAGES
+// ============================================
+
+model ContactMessage {
+  id        String     @id @default(cuid())
+  name      String
+  email     String
+  phone     String?
+  message   String
+  
+  read      Boolean    @default(false)
+  replied   Boolean    @default(false)
+  
+  createdAt DateTime   @default(now())
+  
+  @@index([read])
+  @@map("contact_messages")
+}
+
+// ============================================
+// EVENTS / NEWS
+// ============================================
+
+model Event {
+  id        String     @id @default(cuid())
+  title     String
+  description String
+  date      DateTime
+  location  String
+  image_url String?
+  
+  published Boolean    @default(true)
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  
+  @@index([published])
+  @@index([date])
+  @@map("events")
+}
