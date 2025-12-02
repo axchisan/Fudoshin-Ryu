@@ -62,7 +62,7 @@ export function TestimonialsSection({ testimonials = defaultTestimonials }: Test
                 {Array(5)
                   .fill(0)
                   .map((_, i) => (
-                    <Star key={i} size={18} className="fill-red-600 text-red-600" />
+                    <Star key={`star-${testimonial.id}-${i}`} size={18} className="fill-red-600 text-red-600" />
                   ))}
               </div>
 

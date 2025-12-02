@@ -63,9 +63,9 @@ export function ScheduleSection({ locations = defaultLocations }: ScheduleSectio
         <h2 className="text-5xl md:text-6xl font-bold text-center text-black mb-16">Horarios y Ubicaciones</h2>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
-          {locations.map((location, idx) => (
+          {locations.map((location) => (
             <div
-              key={idx}
+              key={location.name}
               className="bg-black rounded-sm border-2 border-red-600 overflow-hidden hover:shadow-lg hover:shadow-red-600/30 transition"
             >
               {/* Map */}
@@ -103,7 +103,7 @@ export function ScheduleSection({ locations = defaultLocations }: ScheduleSectio
                   </h4>
                   <div className="space-y-3">
                     {location.schedule.map((sched, sidx) => (
-                      <div key={sidx} className="text-sm">
+                      <div key={`${location.name}-${sidx}`} className="text-sm">
                         <p className="text-gray-300 font-semibold">{sched.day}</p>
                         <p className="text-red-400">{sched.time}</p>
                         <p className="text-gray-400 text-xs">{sched.level}</p>

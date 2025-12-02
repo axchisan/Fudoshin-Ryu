@@ -23,7 +23,7 @@ export async function middleware(request: NextRequest) {
         return NextResponse.redirect(new URL("/admin/login", request.url))
       }
     } catch (error) {
-      console.error("[v0] Middleware token verification error:", error)
+      console.error("[v0] Proxy verification error:", error)
       return NextResponse.redirect(new URL("/admin/login", request.url))
     }
   }
