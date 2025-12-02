@@ -9,14 +9,15 @@ let blogPosts: any[] = [
   },
 ]
 
-export async function DELETE(request: Request, { params }: { params: { id: string } }) {
+export async function DELETE(request: Request, { params }: { params: Promise<{ id: string }> }) {
   const token = request.headers.get("Authorization")?.split(" ")[1]
 
   if (!token || !verifyToken(token)) {
     return Response.json({ error: "Unauthorized" }, { status: 401 })
   }
 
-  blogPosts = blogPosts.filter((p) => p.id !== params.id)
+  const { id } = await params
+  blogPosts = blogPosts.filter((p) => p.id !== id)
 
   return Response.json({ success: true })
 }

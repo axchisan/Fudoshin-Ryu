@@ -3,7 +3,7 @@ import { getAdminSession } from "@/lib/auth-helpers"
 import { deleteFile } from "@/lib/file-upload"
 import { NextResponse } from "next/server"
 
-export async function GET(request: Request, { params }: { params: { id: string } }) {
+export async function GET(request: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
     const session = await getAdminSession()
 
@@ -11,8 +11,9 @@ export async function GET(request: Request, { params }: { params: { id: string }
       return NextResponse.json({ error: "No autorizado" }, { status: 401 })
     }
 
+    const { id } = await params
     const image = await db.galleryImage.findUnique({
-      where: { id: params.id },
+      where: { id },
     })
 
     if (!image) {
@@ -26,7 +27,7 @@ export async function GET(request: Request, { params }: { params: { id: string }
   }
 }
 
-export async function PUT(request: Request, { params }: { params: { id: string } }) {
+export async function PUT(request: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
     const session = await getAdminSession()
 
@@ -37,8 +38,9 @@ export async function PUT(request: Request, { params }: { params: { id: string }
     const body = await request.json()
     const { title, description, category, published } = body
 
+    const { id } = await params
     const image = await db.galleryImage.update({
-      where: { id: params.id },
+      where: { id },
       data: {
         title,
         description,
@@ -54,7 +56,7 @@ export async function PUT(request: Request, { params }: { params: { id: string }
   }
 }
 
-export async function DELETE(request: Request, { params }: { params: { id: string } }) {
+export async function DELETE(request: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
     const session = await getAdminSession()
 
@@ -62,8 +64,9 @@ export async function DELETE(request: Request, { params }: { params: { id: strin
       return NextResponse.json({ error: "No autorizado" }, { status: 401 })
     }
 
+    const { id } = await params
     const image = await db.galleryImage.findUnique({
-      where: { id: params.id },
+      where: { id },
     })
 
     if (!image) {
@@ -82,7 +85,7 @@ export async function DELETE(request: Request, { params }: { params: { id: strin
 
     // Delete from database
     await db.galleryImage.delete({
-      where: { id: params.id },
+      where: { id },
     })
 
     return NextResponse.json({ success: true })
