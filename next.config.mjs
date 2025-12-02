@@ -1,7 +1,5 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  reactCompiler: true,
-  swcMinify: true,
   compress: true,
   productionBrowserSourceMaps: false,
   typescript: {

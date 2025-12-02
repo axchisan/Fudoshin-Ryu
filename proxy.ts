@@ -2,7 +2,7 @@ import { NextResponse } from "next/server"
 import type { NextRequest } from "next/server"
 import { verifyToken } from "./lib/jwt"
 
-export async function middleware(request: NextRequest) {
+export default async function proxy(request: NextRequest) {
   // Proteger rutas /admin/*
   if (request.nextUrl.pathname.startsWith("/admin")) {
     // Permitir acceso a login sin autenticación
