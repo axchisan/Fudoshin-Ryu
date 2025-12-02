@@ -8,14 +8,12 @@ RUN apk add --no-cache openssl3 libc6-compat \
 
 WORKDIR /app
 
-ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
 
 # copiar package.json + lockfile para aprovechar cache
 COPY package.json package-lock.json* ./
 
-# instalar dependencias incluyendo devDependencies para el build
-RUN npm ci --legacy-peer-deps
+RUN npm install --legacy-peer-deps
 
 # copiar prisma y generar el cliente
 COPY prisma ./prisma/
