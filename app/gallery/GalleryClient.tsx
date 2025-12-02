@@ -6,6 +6,7 @@ import { useState } from "react"
 import Image from "next/image"
 import { ScrollReveal } from "@/components/scroll-reveal"
 import { X } from "lucide-react"
+import { BackButton } from "@/components/back-button"
 
 const galleryImages = [
   {
@@ -57,6 +58,12 @@ export function GalleryClient() {
     <>
       <Navbar />
       <main className="pt-20">
+        <section className="bg-background py-4 px-4 border-b border-border">
+          <div className="container mx-auto max-w-6xl">
+            <BackButton href="/" label="← Volver al Inicio" />
+          </div>
+        </section>
+
         <section className="bg-background py-16 px-4">
           <div className="container mx-auto max-w-6xl">
             <h1 className="text-6xl font-bold mb-8">Galería</h1>

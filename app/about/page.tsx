@@ -4,6 +4,7 @@ import Image from "next/image"
 import { ToriiGate } from "@/components/torii-gate"
 import { ScrollReveal } from "@/components/scroll-reveal"
 import { SectionSeparator } from "@/components/section-separator"
+import { BackButton } from "@/components/back-button"
 
 export const metadata = {
   title: "Sobre Nosotros - Fudoshin Ryu",
@@ -15,6 +16,12 @@ export default function AboutPage() {
     <>
       <Navbar />
       <main className="pt-20">
+        <section className="bg-background py-4 px-4 border-b border-border">
+          <div className="container mx-auto max-w-4xl">
+            <BackButton href="/" label="← Volver al Inicio" />
+          </div>
+        </section>
+
         {/* Hero Section */}
         <section className="relative min-h-[50vh] bg-gradient-to-b from-background to-card flex items-center justify-center py-16 px-4">
           <div className="absolute top-12 right-12 w-24 h-32 text-red-600 opacity-10">

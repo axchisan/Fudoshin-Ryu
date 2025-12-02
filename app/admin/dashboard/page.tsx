@@ -85,12 +85,12 @@ export default function AdminDashboard() {
 
   return (
     <div className="flex h-screen bg-background">
-      {/* ... existing sidebar code ... */}
+      {/* Sidebar */}
       <div
-        className={`${sidebarOpen ? "w-64" : "w-20"} bg-card border-r border-red-600 p-4 flex flex-col transition-all duration-300 fixed h-full z-40 md:static`}
+        className={`${sidebarOpen ? "w-64" : "w-20"} bg-card border-r border-red-600/20 p-4 flex flex-col transition-all duration-300 fixed h-full z-40 md:static`}
       >
         <div className="mb-8 flex items-center gap-4 justify-between">
-          <div className="w-12 h-12 relative flex-shrink-0">
+          <div className="w-12 h-12 relative flex-shrink-0 rounded-lg overflow-hidden border border-red-600/30">
             <Image src="/images/logo-principal.jpeg" alt="Fudoshin Ryu" fill className="object-contain" />
           </div>
           {sidebarOpen && <span className="text-foreground font-bold text-lg">Admin</span>}
@@ -108,7 +108,7 @@ export default function AdminDashboard() {
 
         <button
           onClick={handleLogout}
-          className="w-full flex items-center gap-3 px-4 py-3 bg-red-600 text-white rounded hover:bg-red-700 transition font-bold"
+          className="w-full flex items-center justify-center gap-3 px-4 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-all duration-500 font-bold active:scale-95"
         >
           <LogOut size={20} />
           {sidebarOpen && "Salir"}
@@ -118,7 +118,7 @@ export default function AdminDashboard() {
       {/* Main Content */}
       <div className="flex-1 flex flex-col overflow-hidden">
         {/* Top Bar */}
-        <div className="bg-card border-b border-red-600 px-6 py-4 flex items-center justify-between md:hidden">
+        <div className="bg-card border-b border-red-600/20 px-6 py-4 flex items-center justify-between md:hidden">
           <h1 className="text-foreground font-bold text-lg">Panel Admin</h1>
           <button onClick={() => setSidebarOpen(!sidebarOpen)} className="text-foreground">
             {sidebarOpen ? <X size={24} /> : <Menu size={24} />}
@@ -141,7 +141,7 @@ export default function AdminDashboard() {
             </div>
 
             {/* Quick Actions */}
-            <div className="bg-card border-2 border-red-600 rounded p-6">
+            <div className="bg-card border border-red-600/30 rounded-softer p-6 hover:shadow-xl hover:shadow-red-600/20 transition-all duration-500">
               <h2 className="text-2xl font-bold text-foreground mb-4">Acciones Rápidas</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 <QuickActionButton href="/admin/content" label="Editar Contenido" />
@@ -173,21 +173,21 @@ function NavItem({
   return (
     <Link
       href={href}
-      className="flex items-center gap-3 px-4 py-3 text-muted-foreground hover:bg-background rounded transition"
+      className="flex items-center gap-3 px-4 py-3 text-muted-foreground hover:text-red-600 hover:bg-red-600/10 rounded-lg transition-all duration-500"
     >
       <span className="text-xl">{icon}</span>
-      {sidebarOpen && <span>{label}</span>}
+      {sidebarOpen && <span className="font-medium">{label}</span>}
     </Link>
   )
 }
 
 function StatCard({ title, count, icon }: { title: string; count: number; icon: string }) {
   return (
-    <div className="bg-card border-2 border-red-600 rounded p-6">
+    <div className="bg-background border border-red-600/30 rounded-softer p-6 hover:shadow-xl hover:shadow-red-600/20 transition-all duration-500">
       <div className="flex items-center gap-4">
         <span className="text-4xl">{icon}</span>
         <div>
-          <p className="text-muted-foreground text-sm">{title}</p>
+          <p className="text-muted-foreground text-sm font-medium">{title}</p>
           <p className="text-3xl font-bold text-red-600">{count}</p>
         </div>
       </div>
@@ -199,7 +199,7 @@ function QuickActionButton({ href, label }: { href: string; label: string }) {
   return (
     <Link
       href={href}
-      className="block bg-background border border-red-600 hover:bg-red-600 text-foreground hover:text-white font-bold py-3 px-4 rounded text-center transition"
+      className="block bg-background border border-red-600/30 hover:border-red-600/60 hover:bg-red-600 text-foreground hover:text-white font-semibold py-3 px-4 rounded-lg text-center transition-all duration-500 active:scale-95"
     >
       {label}
     </Link>

@@ -8,18 +8,16 @@ import { ToriiGate } from "./torii-gate"
 export function HeroSection() {
   return (
     <section className="relative min-h-screen bg-background flex items-center justify-center pt-20 px-4 overflow-hidden">
+      <div className="absolute inset-0 overflow-hidden opacity-[0.08]">
+        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-96 h-96">
+          <ToriiGate />
+        </div>
+      </div>
+
       {/* Background accent lines - Japanese minimalist aesthetic */}
       <div className="absolute inset-0 opacity-5">
         <div className="absolute top-0 left-1/4 w-px h-full bg-red-600"></div>
         <div className="absolute top-0 right-1/4 w-px h-full bg-red-600"></div>
-      </div>
-
-      <div className="absolute top-12 left-8 w-20 h-32 text-red-600 opacity-10">
-        <ToriiGate />
-      </div>
-
-      <div className="absolute bottom-12 right-8 w-20 h-32 text-red-600 opacity-10">
-        <ToriiGate />
       </div>
 
       <div className="container mx-auto max-w-6xl relative z-10">
@@ -59,7 +57,7 @@ export function HeroSection() {
 
           {/* Lema */}
           <motion.div
-            className="my-8 py-8 border-t border-b border-red-600"
+            className="my-8 py-8 border-t border-b border-red-600/30"
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.8, delay: 0.6 }}
@@ -76,13 +74,13 @@ export function HeroSection() {
           >
             <Link
               href="/contact"
-              className="px-8 py-4 bg-red-600 text-white font-bold text-lg rounded hover:bg-red-700 transition shadow-lg hover:shadow-red-600/50"
+              className="px-8 py-4 bg-red-600 text-white font-bold text-lg rounded-lg hover:bg-red-700 transition-all duration-500 shadow-lg hover:shadow-red-600/50 active:scale-95"
             >
               Únete al Dojo
             </Link>
             <Link
               href="/contact"
-              className="px-8 py-4 border-2 border-red-600 text-red-600 font-bold text-lg rounded hover:bg-red-600 hover:text-white transition"
+              className="px-8 py-4 border-2 border-red-600 text-red-600 font-bold text-lg rounded-lg hover:bg-red-600 hover:text-white transition-all duration-500 active:scale-95"
             >
               Contacto
             </Link>

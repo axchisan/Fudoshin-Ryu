@@ -29,7 +29,7 @@
   --chart-3: oklch(0.98 0 0);
   --chart-4: oklch(0.5 0 0);
   --chart-5: oklch(0.75 0 0);
-  --radius: 0.25rem;
+  --radius: 0.5rem;
   --sidebar: oklch(0.98 0 0);
   --sidebar-foreground: oklch(0 0 0);
   --sidebar-primary: oklch(0.58 0.42 15.08);
@@ -44,6 +44,7 @@
   --black-intense: #000000;
   --white: #ffffff;
   --gray-dark: #121212;
+  --gray-light: #e5e5e5;
 }
 
 .dark {
@@ -148,12 +149,10 @@
   }
 }
 
-/* Smooth scroll behavior */
 html {
   scroll-behavior: smooth;
 }
 
-/* Enhanced scrollbar styling for dark/light themes */
 ::-webkit-scrollbar {
   width: 10px;
 }
@@ -169,4 +168,26 @@ html {
 
 ::-webkit-scrollbar-thumb:hover {
   background: var(--primary);
+}
+
+@layer components {
+  .transition-smooth {
+    @apply transition-all duration-300 ease-out;
+  }
+
+  .card-hover {
+    @apply hover:shadow-xl hover:shadow-red-600/20 transition-all duration-500;
+  }
+
+  .btn-smooth {
+    @apply transition-all duration-500 active:scale-95;
+  }
+
+  .border-soft {
+    @apply rounded-lg;
+  }
+
+  .border-softer {
+    @apply rounded-xl;
+  }
 }

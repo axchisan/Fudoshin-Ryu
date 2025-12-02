@@ -1,6 +1,7 @@
 import { Navbar } from "@/components/navbar"
 import { Footer } from "@/components/footer"
 import { ScrollReveal } from "@/components/scroll-reveal"
+import { BackButton } from "@/components/back-button"
 
 export const metadata = {
   title: "Horarios - Fudoshin Ryu",
@@ -44,6 +45,12 @@ export default function SchedulePage() {
     <>
       <Navbar />
       <main className="pt-20">
+        <section className="bg-background py-4 px-4 border-b border-border">
+          <div className="container mx-auto max-w-6xl">
+            <BackButton href="/" label="← Volver al Inicio" />
+          </div>
+        </section>
+
         <section className="bg-background py-16 px-4">
           <div className="container mx-auto max-w-6xl">
             <h1 className="text-6xl font-bold mb-4">Horarios de Clases</h1>
