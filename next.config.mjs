@@ -3,14 +3,24 @@ const nextConfig = {
   compress: true,
   productionBrowserSourceMaps: false,
   typescript: {
-    ignoreBuildErrors: true,
+    ignoreBuildErrors: false,
+  },
+  eslint: {
+    ignoreDuringBuilds: true,
   },
   images: {
     unoptimized: true,
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: '**',
+      },
+    ],
   },
   experimental: {
     optimizeCss: true,
   },
+  output: 'standalone',
 }
 
 export default nextConfig

@@ -3,7 +3,7 @@ import { ThemeProvider as NextThemesProvider, type ThemeProviderProps } from "ne
 
 export function ThemeProvider({ children, ...props }: ThemeProviderProps) {
   return (
-    <NextThemesProvider disableTransitionOnChange={true} storageKey="theme" {...props}>
+    <NextThemesProvider {...props} suppressHydrationWarning>
       {children}
     </NextThemesProvider>
   )

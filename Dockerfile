@@ -8,21 +8,22 @@ RUN apk add --no-cache openssl3 libc6-compat \
 
 WORKDIR /app
 
-# asegurar que el build se haga con NODE_ENV=development para que se instalen devDependencies
-ENV NODE_ENV=development
+ENV NODE_ENV=production
+ENV NEXT_TELEMETRY_DISABLED=1
 
 # copiar package.json + lockfile para aprovechar cache
-COPY package.json package-lock.json ./
+COPY package.json package-lock.json* ./
 
-# instalar dependencias (npm ci ejecuta scripts y descarga engines necesarios)
+# instalar dependencias incluyendo devDependencies para el build
 RUN npm ci --legacy-peer-deps
 
-# copiar prisma y generar el cliente (ahora que los engines están instalados)
-COPY prisma ./prisma
-RUN npx prisma generate --schema=prisma/schema.prisma
+# copiar prisma y generar el cliente
+COPY prisma ./prisma/
+RUN npx prisma generate --schema=./prisma/schema.prisma
 
-# copiar el resto del código y construir (Next.js)
+# copiar el resto del código
 COPY . .
+
 RUN npm run build
 
 # ========= RUNTIME STAGE =========
@@ -34,26 +35,29 @@ RUN apk add --no-cache openssl3 \
 
 WORKDIR /app
 
-# NODE_ENV=production en runtime
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
 
-# Copiamos package.json y package-lock.json para referencia (no instalamos deps aquí)
-COPY package.json package-lock.json ./
+# Crear usuario no-root
+RUN addgroup --system --gid 1001 nodejs \
+    && adduser --system --uid 1001 nextjs
 
-# Copiar artefactos generados desde el builder
-COPY --from=builder /app/.next ./.next
 COPY --from=builder /app/public ./public
 COPY --from=builder /app/prisma ./prisma
+COPY --from=builder /app/package.json ./package.json
 
-# Copiar node_modules completos que se generaron en el builder
-# esto asegura que los engines de Prisma y demás binarios estén disponibles
-COPY --from=builder /app/node_modules ./node_modules
+# Copy standalone output
+COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
+COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 
 # permisos para uploads
-RUN mkdir -p ./public/uploads && chmod 755 ./public/uploads
+RUN mkdir -p ./public/uploads && chown -R nextjs:nodejs ./public/uploads
+
+USER nextjs
 
 EXPOSE 3000
 
-# En runtime ejecutamos migraciones y levantamos Next.js
-CMD ["sh", "-c", "npx prisma migrate deploy && next start -p 3000"]
+ENV PORT=3000
+ENV HOSTNAME="0.0.0.0"
+
+CMD ["sh", "-c", "npx prisma migrate deploy && node server.js"]
