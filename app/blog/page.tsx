@@ -1,17 +1,24 @@
-"use client"  
+"use client"   
 
 import { Navbar } from "@/components/navbar"
 import { Footer } from "@/components/footer"
 import { ScrollReveal } from "@/components/scroll-reveal"
 import Link from "next/link"
 import Image from "next/image"
+import type { Metadata } from "next"
+
+export async function generateMetadata(): Promise<Metadata> {
+  return {
+    title: "Blog - Fudoshin Ryu",
+    description: "Artículos, tips y noticias sobre Shotokan Karate-Do",
+  }
+}
 
 const blogPosts = [
   {
     id: 1,
     title: "Introducción al Shotokan Karate-Do",
-    excerpt:
-      "Aprende los fundamentos del Shotokan, uno de los estilos más populares y tradicionales del karate moderno.",
+    excerpt: "Aprende los fundamentos del Shotokan, uno de los estilos más populares y tradicionales del karate moderno.",
     image: "/shotokan-karate-introduction.jpg",
     date: "2024-01-15",
     author: "Sensei Leonardo",
@@ -36,11 +43,6 @@ const blogPosts = [
     slug: "seguridad-entrenamiento",
   },
 ]
-
-export const metadata = {
-  title: "Blog - Fudoshin Ryu",
-  description: "Artículos y noticias sobre Shotokan Karate-Do",
-}
 
 export default function BlogPage() {
   return (
@@ -69,19 +71,7 @@ export default function BlogPage() {
   )
 }
 
-function BlogCard({
-  post,
-}: {
-  post: {
-    id: number
-    title: string
-    excerpt: string
-    image: string
-    date: string
-    author: string
-    slug: string
-  }
-}) {
+function BlogCard({ post }: { post: typeof blogPosts[0] }) {
   return (
     <Link href={`/blog/${post.slug}`}>
       <article className="group cursor-pointer border border-red-600 rounded-lg overflow-hidden hover:shadow-lg hover:shadow-red-600/20 transition">
@@ -104,7 +94,7 @@ function BlogCard({
             </h3>
             <p className="text-muted-foreground mb-4">{post.excerpt}</p>
             <div className="text-red-600 font-bold group-hover:translate-x-2 transition inline-block">
-              Leer más →
+              Leer más
             </div>
           </div>
         </div>
