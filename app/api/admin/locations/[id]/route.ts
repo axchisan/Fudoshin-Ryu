@@ -30,15 +30,15 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
   try {
     const { id } = await params
     const body = await request.json()
-    const { name, address, latitude, longitude, is_main } = body
+    const { name, address, description, map_embed_url, is_main } = body
 
     const location = await db.location.update({
       where: { id },
       data: {
         name,
         address,
-        latitude: latitude ? Number.parseFloat(latitude) : null,
-        longitude: longitude ? Number.parseFloat(longitude) : null,
+        description: description || null,
+        map_embed_url: map_embed_url || null,
         is_main,
       },
     })

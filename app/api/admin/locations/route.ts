@@ -24,7 +24,7 @@ export async function GET() {
 export async function POST(request: Request) {
   try {
     const body = await request.json()
-    const { name, address, latitude, longitude, is_main } = body
+    const { name, address, description, map_embed_url, is_main } = body
 
     if (!name || !address) {
       return NextResponse.json({ error: "Nombre y dirección requeridos" }, { status: 400 })
@@ -34,8 +34,8 @@ export async function POST(request: Request) {
       data: {
         name,
         address,
-        latitude: latitude ? Number.parseFloat(latitude) : null,
-        longitude: longitude ? Number.parseFloat(longitude) : null,
+        description: description || null,
+        map_embed_url: map_embed_url || null,
         is_main: is_main || false,
       },
     })

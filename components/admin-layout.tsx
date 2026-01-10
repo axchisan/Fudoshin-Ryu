@@ -5,7 +5,7 @@ import type React from "react"
 import { useRouter } from "next/navigation"
 import Image from "next/image"
 import Link from "next/link"
-import { LogOut, Menu, X } from "lucide-react"
+import { LogOut, Menu, X, Home } from "lucide-react"
 import { useState } from "react"
 
 interface AdminLayoutProps {
@@ -17,36 +17,51 @@ export default function AdminLayout({ title, children }: AdminLayoutProps) {
   const router = useRouter()
   const [sidebarOpen, setSidebarOpen] = useState(true)
 
-  const handleLogout = () => {
-    localStorage.removeItem("adminToken")
-    router.push("/admin/login")
+  const handleLogout = async () => {
+    try {
+      await fetch("/api/admin/logout", { method: "POST" })
+    } catch (err) {
+      console.error("[v0] Logout error:", err)
+    } finally {
+      router.push("/admin/login")
+    }
   }
 
   return (
-    <div className="flex h-screen bg-black">
+    <div className="flex h-screen bg-background">
       {/* Sidebar */}
       <div
-        className={`${sidebarOpen ? "w-64" : "w-20"} bg-gray-900 border-r border-red-600 p-4 flex flex-col transition-all duration-300 fixed h-full z-40 md:static`}
+        className={`${sidebarOpen ? "w-64" : "w-20"} bg-card border-r border-red-600/20 p-4 flex flex-col transition-all duration-300 fixed h-full z-40 md:static`}
       >
         <div className="mb-8 flex items-center gap-4 justify-between">
-          <div className="w-12 h-12 relative flex-shrink-0">
+          <div className="w-12 h-12 relative flex-shrink-0 rounded-lg overflow-hidden border border-red-600/30">
             <Image src="/images/logo-principal.jpeg" alt="Fudoshin Ryu" fill className="object-contain" />
           </div>
-          {sidebarOpen && <span className="text-white font-bold text-lg">Admin</span>}
+          {sidebarOpen && <span className="text-foreground font-bold text-lg">Admin</span>}
         </div>
 
         <nav className="flex-1 space-y-2">
           <NavItem href="/admin/dashboard" icon="📊" label="Dashboard" sidebarOpen={sidebarOpen} />
-          <NavItem href="/admin/content" icon="📝" label="Contenido" sidebarOpen={sidebarOpen} />
+          <NavItem href="/admin/settings" icon="⚙️" label="Configuración" sidebarOpen={sidebarOpen} />
+          <NavItem href="/admin/locations" icon="📍" label="Ubicaciones" sidebarOpen={sidebarOpen} />
+          <NavItem href="/admin/schedules" icon="🕒" label="Horarios" sidebarOpen={sidebarOpen} />
           <NavItem href="/admin/blog" icon="📰" label="Blog" sidebarOpen={sidebarOpen} />
           <NavItem href="/admin/gallery" icon="🖼️" label="Galería" sidebarOpen={sidebarOpen} />
           <NavItem href="/admin/testimonials" icon="💬" label="Testimonios" sidebarOpen={sidebarOpen} />
           <NavItem href="/admin/messages" icon="📧" label="Mensajes" sidebarOpen={sidebarOpen} />
         </nav>
 
+        <Link
+          href="/"
+          className="w-full flex items-center justify-center gap-3 px-4 py-3 bg-muted hover:bg-muted/80 text-foreground rounded-lg transition-all duration-500 font-semibold active:scale-95 mb-3"
+        >
+          <Home size={20} />
+          {sidebarOpen && "Sitio Público"}
+        </Link>
+
         <button
           onClick={handleLogout}
-          className="w-full flex items-center gap-3 px-4 py-3 bg-red-600 text-white rounded hover:bg-red-700 transition font-bold"
+          className="w-full flex items-center justify-center gap-3 px-4 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-all duration-500 font-bold active:scale-95"
         >
           <LogOut size={20} />
           {sidebarOpen && "Salir"}
@@ -55,16 +70,16 @@ export default function AdminLayout({ title, children }: AdminLayoutProps) {
 
       {/* Main Content */}
       <div className="flex-1 flex flex-col overflow-hidden">
-        <div className="bg-gray-900 border-b border-red-600 px-6 py-4 flex items-center justify-between md:hidden">
-          <h1 className="text-white font-bold text-lg">{title}</h1>
-          <button onClick={() => setSidebarOpen(!sidebarOpen)} className="text-white">
+        <div className="bg-card border-b border-red-600/20 px-6 py-4 flex items-center justify-between md:hidden">
+          <h1 className="text-foreground font-bold text-lg">{title}</h1>
+          <button onClick={() => setSidebarOpen(!sidebarOpen)} className="text-foreground">
             {sidebarOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
         </div>
 
         <div className="flex-1 overflow-auto p-6">
-          <div className="max-w-4xl hidden md:block mb-6">
-            <h1 className="text-3xl font-bold text-white">{title}</h1>
+          <div className="max-w-6xl hidden md:block mb-6">
+            <h1 className="text-3xl font-bold text-foreground">{title}</h1>
           </div>
           {children}
         </div>
@@ -85,9 +100,12 @@ function NavItem({
   sidebarOpen: boolean
 }) {
   return (
-    <Link href={href} className="flex items-center gap-3 px-4 py-3 text-gray-300 hover:bg-gray-800 rounded transition">
+    <Link
+      href={href}
+      className="flex items-center gap-3 px-4 py-3 text-muted-foreground hover:text-red-600 hover:bg-red-600/10 rounded-lg transition-all duration-500"
+    >
       <span className="text-xl">{icon}</span>
-      {sidebarOpen && <span>{label}</span>}
+      {sidebarOpen && <span className="font-medium">{label}</span>}
     </Link>
   )
 }

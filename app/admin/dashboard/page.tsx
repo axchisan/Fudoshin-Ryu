@@ -4,7 +4,7 @@ import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import Image from "next/image"
 import Link from "next/link"
-import { LogOut, Menu, X } from "lucide-react"
+import { LogOut, Menu, X, Home } from "lucide-react"
 
 interface AdminInfo {
   id: string
@@ -16,6 +16,7 @@ interface DashboardStats {
   totalMessages: number
   totalPosts: number
   totalImages: number
+  totalTestimonials: number
 }
 
 export default function AdminDashboard() {
@@ -27,6 +28,7 @@ export default function AdminDashboard() {
     totalMessages: 0,
     totalPosts: 0,
     totalImages: 0,
+    totalTestimonials: 0,
   })
 
   useEffect(() => {
@@ -104,7 +106,16 @@ export default function AdminDashboard() {
           <NavItem href="/admin/blog" icon="📰" label="Blog" sidebarOpen={sidebarOpen} />
           <NavItem href="/admin/gallery" icon="🖼️" label="Galería" sidebarOpen={sidebarOpen} />
           <NavItem href="/admin/messages" icon="📧" label="Mensajes" sidebarOpen={sidebarOpen} />
+          <NavItem href="/admin/testimonials" icon="💬" label="Testimonios" sidebarOpen={sidebarOpen} />
         </nav>
+
+        <Link
+          href="/"
+          className="w-full flex items-center justify-center gap-3 px-4 py-3 bg-muted hover:bg-muted/80 text-foreground rounded-lg transition-all duration-500 font-semibold active:scale-95 mb-3"
+        >
+          <Home size={20} />
+          {sidebarOpen && "Sitio Público"}
+        </Link>
 
         <button
           onClick={handleLogout}
@@ -134,20 +145,21 @@ export default function AdminDashboard() {
             </div>
 
             {/* Stats Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
               <StatCard title="Mensajes" count={stats.totalMessages} icon="📧" />
               <StatCard title="Publicaciones" count={stats.totalPosts} icon="📝" />
               <StatCard title="Imágenes" count={stats.totalImages} icon="🖼️" />
+              <StatCard title="Testimonios" count={stats.totalTestimonials} icon="💬" />
             </div>
 
             {/* Quick Actions */}
             <div className="bg-card border border-red-600/30 rounded-softer p-6 hover:shadow-xl hover:shadow-red-600/20 transition-all duration-500">
               <h2 className="text-2xl font-bold text-foreground mb-4">Acciones Rápidas</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                <QuickActionButton href="/admin/content" label="Editar Contenido" />
+                <QuickActionButton href="/admin/settings" label="Editar Configuración" />
                 <QuickActionButton href="/admin/blog" label="Nueva Publicación" />
                 <QuickActionButton href="/admin/gallery" label="Subir Fotos" />
-                <QuickActionButton href="/admin/profile" label="Mi Perfil" />
+                <QuickActionButton href="/admin/locations" label="Gestionar Ubicaciones" />
                 <QuickActionButton href="/admin/testimonials" label="Gestionar Testimonios" />
                 <QuickActionButton href="/admin/messages" label="Ver Mensajes" />
               </div>
