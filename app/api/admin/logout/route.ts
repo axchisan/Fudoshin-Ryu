@@ -1,11 +1,12 @@
 import { db } from "@/lib/db"
 import { verifyToken } from "@/lib/jwt"
 import { NextResponse } from "next/server"
+import { cookies } from "next/headers"
 
-export async function POST(request: Request) {
+export async function POST() {
   try {
-    const authHeader = request.headers.get("authorization")
-    const token = authHeader?.replace("Bearer ", "")
+    const cookieStore = await cookies()
+    const token = cookieStore.get("adminToken")?.value
 
     if (!token) {
       return NextResponse.json({ error: "Token no proporcionado" }, { status: 401 })
@@ -19,7 +20,10 @@ export async function POST(request: Request) {
       })
     }
 
-    return NextResponse.json({ success: true })
+    const response = NextResponse.json({ success: true })
+    response.cookies.delete("adminToken")
+
+    return response
   } catch (error) {
     console.error("[v0] Logout error:", error)
     return NextResponse.json({ error: "Error al cerrar sesión" }, { status: 500 })

@@ -10,7 +10,6 @@ export default async function proxy(request: NextRequest) {
       return NextResponse.next()
     }
 
-    // Verificar token para otras rutas admin
     const token = request.cookies.get("adminToken")?.value
 
     if (!token) {

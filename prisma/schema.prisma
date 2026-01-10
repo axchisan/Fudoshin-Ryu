@@ -81,8 +81,8 @@ model Location {
   id        String     @id @default(cuid())
   name      String     // "Vélez", "Barbosa", "Guavatá"
   address   String
-  latitude  Float?
-  longitude Float?
+  description String?   // Description of the location
+  map_embed_url String? // Google Maps embed URL
   is_main   Boolean    @default(false)
   
   createdAt DateTime   @default(now())
@@ -164,7 +164,9 @@ model GalleryImage {
   image_url String     // URL to uploaded image on server
   thumbnail_url String?
   description String?
-  category  String?    // "Clases", "Torneos", "Graduaciones", "Eventos"
+  category  String     @default("General") // "Clases", "Torneos", "Graduaciones", "Eventos", "General"
+  alt_text  String?    // Accessibility alt text
+  tags      String?    // Comma-separated tags for filtering
   
   order     Int        @default(0)
   published Boolean    @default(true)

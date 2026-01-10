@@ -98,11 +98,11 @@ export default function AdminDashboard() {
 
         <nav className="flex-1 space-y-2">
           <NavItem href="/admin/dashboard" icon="📊" label="Dashboard" sidebarOpen={sidebarOpen} />
-          <NavItem href="/admin/profile" icon="👤" label="Mi Perfil" sidebarOpen={sidebarOpen} />
-          <NavItem href="/admin/content" icon="📝" label="Contenido" sidebarOpen={sidebarOpen} />
+          <NavItem href="/admin/settings" icon="⚙️" label="Configuración" sidebarOpen={sidebarOpen} />
+          <NavItem href="/admin/locations" icon="📍" label="Ubicaciones" sidebarOpen={sidebarOpen} />
+          <NavItem href="/admin/schedules" icon="🕒" label="Horarios" sidebarOpen={sidebarOpen} />
           <NavItem href="/admin/blog" icon="📰" label="Blog" sidebarOpen={sidebarOpen} />
           <NavItem href="/admin/gallery" icon="🖼️" label="Galería" sidebarOpen={sidebarOpen} />
-          <NavItem href="/admin/testimonials" icon="💬" label="Testimonios" sidebarOpen={sidebarOpen} />
           <NavItem href="/admin/messages" icon="📧" label="Mensajes" sidebarOpen={sidebarOpen} />
         </nav>
 

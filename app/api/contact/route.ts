@@ -1,8 +1,24 @@
+import { db } from "@/lib/db"
+import { NextResponse } from "next/server"
+
 export async function POST(request: Request) {
-  const { name, email, phone, message } = await request.json()
+  try {
+    const { name, email, phone, message } = await request.json()
 
-  // In a real app, save to database
-  console.log("Contact message:", { name, email, phone, message })
+    await db.contactMessage.create({
+      data: {
+        name,
+        email,
+        phone: phone || null,
+        message,
+        read: false,
+        replied: false,
+      },
+    })
 
-  return Response.json({ success: true })
+    return NextResponse.json({ success: true })
+  } catch (error) {
+    console.error("[v0] Error saving contact message:", error)
+    return NextResponse.json({ error: "Failed to send message" }, { status: 500 })
+  }
 }

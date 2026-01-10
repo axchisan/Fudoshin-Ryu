@@ -1,16 +1,23 @@
-import { verifyToken } from "@/lib/auth"
-
-let contactMessages: any[] = []
+import { db } from "@/lib/db"
+import { NextResponse } from "next/server"
+import { getAdminSession } from "@/lib/auth-helpers"
 
 export async function DELETE(request: Request, { params }: { params: Promise<{ id: string }> }) {
-  const token = request.headers.get("Authorization")?.split(" ")[1]
+  try {
+    const session = await getAdminSession(request)
+    if (!session) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+    }
 
-  if (!token || !verifyToken(token)) {
-    return Response.json({ error: "Unauthorized" }, { status: 401 })
+    const { id } = await params
+
+    await db.contactMessage.delete({
+      where: { id },
+    })
+
+    return NextResponse.json({ success: true })
+  } catch (error) {
+    console.error("[v0] Error deleting message:", error)
+    return NextResponse.json({ error: "Failed to delete message" }, { status: 500 })
   }
-
-  const { id } = await params
-  contactMessages = contactMessages.filter((m) => m.id !== id)
-
-  return Response.json({ success: true })
 }

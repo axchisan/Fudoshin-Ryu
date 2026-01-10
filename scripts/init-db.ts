@@ -1,12 +1,11 @@
-// scripts/init-db.ts
 import { PrismaClient } from "@prisma/client"
-import crypto from "crypto"
+import bcrypt from "bcryptjs"
 
 const prisma = new PrismaClient()
 
-// Helper para hashear contraseña (mismo método que usas en login)
-function hashPassword(password: string): string {
-  return crypto.createHash("sha256").update(password).digest("hex")
+async function hashPassword(password: string): Promise<string> {
+  const salt = await bcrypt.genSalt(10)
+  return bcrypt.hash(password, salt)
 }
 
 async function main() {
@@ -21,9 +20,9 @@ async function main() {
 
     if (!email || !password) {
       console.log("[seed] No se encontraron ADMIN_EMAIL y/o ADMIN_PASSWORD → no se crea admin por defecto.")
-      console.log("[seed] Esto es normal en entornos ya inicializados o si prefieres crear el admin manualmente.")
+      console.log("[seed] El admin debe ser creado manualmente.")
     } else {
-      const hashed = hashPassword(password)
+      const hashed = await hashPassword(password)
 
       const admin = await prisma.admin.create({
         data: {
@@ -39,45 +38,27 @@ async function main() {
     console.log(`[seed] Ya existen ${adminCount} admin(s). Saltando creación.`)
   }
 
-  // 2. Crear configuraciones del sitio (solo si no existen)
   const settings = await prisma.siteSettings.findFirst()
   if (!settings) {
     await prisma.siteSettings.create({
       data: {
         dojo_name: "Fudoshin Ryu",
         sensei_name: "Leonardo Vanegas Martínez",
-        phone: "+57 300 123 4567",
-        email: process.env.ADMIN_EMAIL || "contacto@fudoshinryu.com",
-        instagram_url: "https://instagram.com/fudoshinryu",
+        sensei_bio: "",
+        dojo_philosophy: "",
+        dojo_motto: "",
+        jka_affiliation: "Afiliado a Japan Karate Association (JKA)",
+        phone: "",
+        email: process.env.ADMIN_EMAIL || "",
+        instagram_url: "",
       },
     })
-    console.log("[seed] Configuración del sitio creada")
+    console.log("[seed] Configuración del sitio creada (datos mínimos)")
   }
 
-  // 3. Crear sedes (solo si no existen)
-  const locations = await prisma.location.findMany()
-  if (locations.length === 0) {
-    await prisma.location.createMany({
-      data: [
-        {
-          name: "Vélez",
-          address: "Vélez, Santander, Colombia",
-          is_main: true,
-        },
-        {
-          name: "Barbosa",
-          address: "Barbosa, Santander, Colombia",
-        },
-        {
-          name: "Guavatá",
-          address: "Guavatá, Santander, Colombia",
-        },
-      ],
-    })
-    console.log("[seed] Sedes creadas: Vélez (principal), Barbosa, Guavatá")
-  }
-
-  console.log("[seed] Seed completado con éxito!")
+  console.log(
+    "[seed] Seed completado. El sensei debe agregar ubicaciones, horarios, blog, galería desde el panel admin.",
+  )
 }
 
 main()

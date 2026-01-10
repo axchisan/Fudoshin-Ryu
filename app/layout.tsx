@@ -21,25 +21,16 @@ export const metadata: Metadata = {
     "Escuela de Artes Marciales Shotokan Karate-Do tradicional en Vélez, Santander. Sensei Leonardo Vanegas Martínez. Fuerza • Honor • Disciplina",
   generator: "v0.app",
   keywords: "karate, shotokan, JKA, artes marciales, vélez santander, fudoshin",
-
-  icons: {
-    icon: [
-      { url: "/favicon.ico" },
-      { url: "/favicon.svg", type: "image/svg+xml" },
-      { url: "/favicon-96x96.png", sizes: "96x96" },
-    ],
-    apple: "/apple-touch-icon.png",
-  },
-
-  manifest: "/site.webmanifest",
-
   openGraph: {
     title: "Fudoshin Ryu - Shotokan Karate-Do JKA",
     description: "Escuela de Artes Marciales Shotokan Karate-Do tradicional",
     type: "website",
   },
+  icons: {
+    icon: "/icon-light-32x32.png",
+    apple: "/apple-icon.png",
+  },
 }
-
 
 export default function RootLayout({
   children,

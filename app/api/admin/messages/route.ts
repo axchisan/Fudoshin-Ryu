@@ -1,23 +1,42 @@
-import { verifyToken } from "@/lib/auth"
-
-const contactMessages: any[] = []
+import { db } from "@/lib/db"
+import { NextResponse } from "next/server"
+import { getAdminSession } from "@/lib/auth-helpers"
 
 export async function GET(request: Request) {
-  const token = request.headers.get("Authorization")?.split(" ")[1]
+  try {
+    const session = await getAdminSession(request)
+    if (!session) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+    }
 
-  if (!token || !verifyToken(token)) {
-    return Response.json({ error: "Unauthorized" }, { status: 401 })
+    const messages = await db.contactMessage.findMany({
+      orderBy: { createdAt: "desc" },
+    })
+
+    return NextResponse.json({ messages })
+  } catch (error) {
+    console.error("[v0] Error fetching messages:", error)
+    return NextResponse.json({ messages: [] })
   }
-
-  return Response.json(contactMessages)
 }
 
-export async function POST(request: Request) {
-  const message = await request.json()
-  message.id = Date.now().toString()
-  message.created_at = new Date()
-  message.read = false
-  contactMessages.push(message)
+export async function PUT(request: Request) {
+  try {
+    const session = await getAdminSession(request)
+    if (!session) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+    }
 
-  return Response.json({ success: true })
+    const { id, read, replied } = await request.json()
+
+    await db.contactMessage.update({
+      where: { id },
+      data: { read, replied },
+    })
+
+    return NextResponse.json({ success: true })
+  } catch (error) {
+    console.error("[v0] Error updating message:", error)
+    return NextResponse.json({ error: "Failed to update message" }, { status: 500 })
+  }
 }

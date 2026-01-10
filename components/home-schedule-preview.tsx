@@ -3,36 +3,62 @@
 import { motion } from "framer-motion"
 import { Clock, MapPin, ArrowRight } from "lucide-react"
 import Link from "next/link"
+import { useEffect, useState } from "react"
+
+interface Schedule {
+  day_of_week: number
+  start_time: string
+  end_time: string
+  level: string
+}
+
+interface Location {
+  id: string
+  name: string
+  address: string
+  schedules: Schedule[]
+}
+
+const DAYS = ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"]
 
 export function HomeSchedulePreview() {
-  const locations = [
-    {
-      name: "Vélez (Principal)",
-      city: "Vélez, Santander",
-      schedules: [
-        { day: "Lunes", time: "18:00 - 19:30", level: "Principiantes" },
-        { day: "Miércoles", time: "18:00 - 19:30", level: "Intermedio" },
-        { day: "Viernes", time: "18:00 - 19:30", level: "Avanzado" },
-        { day: "Sábado", time: "09:00 - 10:30", level: "Niños" },
-      ],
-    },
-    {
-      name: "Barbosa",
-      city: "Barbosa, Santander",
-      schedules: [
-        { day: "Martes", time: "17:00 - 18:30", level: "Principiantes" },
-        { day: "Jueves", time: "17:00 - 18:30", level: "Todos" },
-      ],
-    },
-    {
-      name: "Guavatá",
-      city: "Guavatá, Santander",
-      schedules: [
-        { day: "Miércoles", time: "19:00 - 20:30", level: "Todos" },
-        { day: "Sábado", time: "14:00 - 15:30", level: "Niños" },
-      ],
-    },
-  ]
+  const [locations, setLocations] = useState<Location[]>([])
+  const [isLoading, setIsLoading] = useState(true)
+
+  useEffect(() => {
+    fetch("/api/site/locations")
+      .then((res) => res.json())
+      .then((data) => {
+        setLocations(data.slice(0, 3))
+        setIsLoading(false)
+      })
+      .catch((err) => {
+        console.error("[v0] Error loading locations:", err)
+        setIsLoading(false)
+      })
+  }, [])
+
+  if (isLoading) {
+    return (
+      <section className="py-24 bg-card">
+        <div className="container mx-auto px-4 text-center">
+          <p className="text-muted-foreground">Cargando horarios...</p>
+        </div>
+      </section>
+    )
+  }
+
+  if (locations.length === 0) {
+    return (
+      <section className="py-24 bg-card">
+        <div className="container mx-auto px-4 max-w-6xl">
+          <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-4">Horarios y Ubicaciones</h2>
+          <div className="w-12 h-1 bg-gradient-to-r from-red-600 to-red-600/20 rounded-full mb-6"></div>
+          <p className="text-muted-foreground">No hay ubicaciones disponibles aún.</p>
+        </div>
+      </section>
+    )
+  }
 
   return (
     <section className="py-24 bg-card">
@@ -46,13 +72,13 @@ export function HomeSchedulePreview() {
         >
           <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-4">Horarios y Ubicaciones</h2>
           <div className="w-12 h-1 bg-gradient-to-r from-red-600 to-red-600/20 rounded-full"></div>
-          <p className="text-muted-foreground mt-4 text-lg">Clases disponibles en tres sedes principales</p>
+          <p className="text-muted-foreground mt-4 text-lg">Clases disponibles en nuestras sedes</p>
         </motion.div>
 
         <div className="grid md:grid-cols-3 gap-6 mb-8">
           {locations.map((location, idx) => (
             <motion.div
-              key={location.name}
+              key={location.id}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: idx * 0.1 }}
@@ -62,16 +88,18 @@ export function HomeSchedulePreview() {
               <h3 className="text-xl font-bold text-red-600 mb-2">{location.name}</h3>
               <div className="flex items-center gap-2 text-muted-foreground mb-4">
                 <MapPin size={16} />
-                <p className="text-sm">{location.city}</p>
+                <p className="text-sm">{location.address}</p>
               </div>
 
               <div className="space-y-3">
-                {location.schedules.map((sched) => (
-                  <div key={`${location.name}-${sched.day}`} className="text-sm">
-                    <p className="font-semibold text-foreground">{sched.day}</p>
+                {location.schedules.slice(0, 4).map((sched, i) => (
+                  <div key={i} className="text-sm">
+                    <p className="font-semibold text-foreground">{DAYS[sched.day_of_week]}</p>
                     <div className="flex items-center gap-2 text-red-600 mt-1">
                       <Clock size={14} />
-                      <p>{sched.time}</p>
+                      <p>
+                        {sched.start_time} - {sched.end_time}
+                      </p>
                     </div>
                     <p className="text-muted-foreground text-xs mt-1">{sched.level}</p>
                   </div>

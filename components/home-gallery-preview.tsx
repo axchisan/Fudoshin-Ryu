@@ -4,25 +4,53 @@ import { motion } from "framer-motion"
 import Image from "next/image"
 import Link from "next/link"
 import { ArrowRight } from "lucide-react"
+import { useEffect, useState } from "react"
+
+interface GalleryImage {
+  id: string
+  title: string
+  image_url: string
+  category: string | null
+}
 
 export function HomeGalleryPreview() {
-  const galleryItems = [
-    {
-      src: "/karate-class-training.jpg",
-      title: "Clases de Entrenamiento",
-      category: "Clases",
-    },
-    {
-      src: "/karate-tournament-competition.jpg",
-      title: "Torneos y Competencias",
-      category: "Torneos",
-    },
-    {
-      src: "/karate-belt-graduation.jpg",
-      title: "Graduaciones y Cinturones",
-      category: "Eventos",
-    },
-  ]
+  const [images, setImages] = useState<GalleryImage[]>([])
+  const [isLoading, setIsLoading] = useState(true)
+
+  useEffect(() => {
+    fetch("/api/site/gallery")
+      .then((res) => res.json())
+      .then((data) => {
+        setImages(data.slice(0, 3))
+        setIsLoading(false)
+      })
+      .catch((err) => {
+        console.error("[v0] Error loading gallery:", err)
+        setIsLoading(false)
+      })
+  }, [])
+
+  if (isLoading) {
+    return (
+      <section className="py-24 bg-background">
+        <div className="container mx-auto px-4 text-center">
+          <p className="text-muted-foreground">Cargando galería...</p>
+        </div>
+      </section>
+    )
+  }
+
+  if (images.length === 0) {
+    return (
+      <section className="py-24 bg-background">
+        <div className="container mx-auto px-4 max-w-6xl">
+          <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-4">Galería</h2>
+          <div className="w-12 h-1 bg-gradient-to-r from-red-600 to-red-600/20 rounded-full mb-6"></div>
+          <p className="text-muted-foreground">No hay imágenes disponibles aún.</p>
+        </div>
+      </section>
+    )
+  }
 
   return (
     <section className="py-24 bg-background">
@@ -40,9 +68,9 @@ export function HomeGalleryPreview() {
         </motion.div>
 
         <div className="grid md:grid-cols-3 gap-6 mb-8">
-          {galleryItems.map((item, idx) => (
+          {images.map((item, idx) => (
             <motion.div
-              key={item.title}
+              key={item.id}
               initial={{ opacity: 0, scale: 0.95 }}
               whileInView={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.6, delay: idx * 0.1 }}
@@ -50,13 +78,13 @@ export function HomeGalleryPreview() {
               className="group relative overflow-hidden rounded-softer h-64 cursor-pointer hover:shadow-xl hover:shadow-red-600/20 transition-all duration-500"
             >
               <Image
-                src={item.src || "/placeholder.svg"}
+                src={item.image_url || "/placeholder.svg?height=400&width=400"}
                 alt={item.title}
                 fill
                 className="object-cover group-hover:scale-110 transition-all duration-500"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent flex flex-col justify-end p-4">
-                <p className="text-red-400 text-sm font-semibold">{item.category}</p>
+                {item.category && <p className="text-red-400 text-sm font-semibold">{item.category}</p>}
                 <h3 className="text-white font-bold text-lg">{item.title}</h3>
               </div>
             </motion.div>

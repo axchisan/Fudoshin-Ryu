@@ -11,7 +11,6 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Email y contraseña requeridos" }, { status: 400 })
     }
 
-    // Find admin in database
     const admin = await db.admin.findUnique({
       where: { email },
     })
@@ -20,20 +19,17 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Credenciales inválidas" }, { status: 401 })
     }
 
-    // Verify password
     const passwordMatch = await verifyPassword(password, admin.password)
 
     if (!passwordMatch) {
       return NextResponse.json({ error: "Credenciales inválidas" }, { status: 401 })
     }
 
-    // Create JWT token
     const token = await createToken({
       adminId: admin.id,
       email: admin.email,
     })
 
-    // Save session to database
     await db.adminSession.create({
       data: {
         adminId: admin.id,
@@ -42,7 +38,20 @@ export async function POST(request: Request) {
       },
     })
 
-    return NextResponse.json({ token, admin: { id: admin.id, email: admin.email, name: admin.name } })
+    const response = NextResponse.json({
+      success: true,
+      admin: { id: admin.id, email: admin.email, name: admin.name },
+    })
+
+    response.cookies.set("adminToken", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      maxAge: 24 * 60 * 60,
+      path: "/",
+    })
+
+    return response
   } catch (error) {
     console.error("[v0] Login error:", error)
     return NextResponse.json({ error: "Error al procesar solicitud" }, { status: 500 })
