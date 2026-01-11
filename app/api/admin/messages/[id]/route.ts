@@ -4,7 +4,7 @@ import { getAdminSession } from "@/lib/auth-helpers"
 
 export async function DELETE(request: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
-    const session = await getAdminSession(request)
+    const session = await getAdminSession()
     if (!session) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
     }
@@ -17,7 +17,7 @@ export async function DELETE(request: Request, { params }: { params: Promise<{ i
 
     return NextResponse.json({ success: true })
   } catch (error) {
-    console.error("[v0] Error deleting message:", error)
+    console.error("Error deleting message:", error)
     return NextResponse.json({ error: "Failed to delete message" }, { status: 500 })
   }
 }

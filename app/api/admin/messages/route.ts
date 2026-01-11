@@ -4,7 +4,7 @@ import { getAdminSession } from "@/lib/auth-helpers"
 
 export async function GET(request: Request) {
   try {
-    const session = await getAdminSession(request)
+    const session = await getAdminSession()
     if (!session) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
     }
@@ -15,14 +15,14 @@ export async function GET(request: Request) {
 
     return NextResponse.json({ messages })
   } catch (error) {
-    console.error("[v0] Error fetching messages:", error)
+    console.error("Error fetching messages:", error)
     return NextResponse.json({ messages: [] })
   }
 }
 
 export async function PUT(request: Request) {
   try {
-    const session = await getAdminSession(request)
+    const session = await getAdminSession()
     if (!session) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
     }
@@ -36,7 +36,7 @@ export async function PUT(request: Request) {
 
     return NextResponse.json({ success: true })
   } catch (error) {
-    console.error("[v0] Error updating message:", error)
+    console.error("Error updating message:", error)
     return NextResponse.json({ error: "Failed to update message" }, { status: 500 })
   }
 }
