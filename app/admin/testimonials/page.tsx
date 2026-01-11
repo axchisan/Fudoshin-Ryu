@@ -309,12 +309,18 @@ export default function TestimonialsPage() {
                       <h4 className="text-lg font-bold text-foreground">{testimonial.name}</h4>
                       <span className="text-sm text-muted-foreground">{testimonial.level}</span>
                       {testimonial.approved ? (
-                        <CheckCircle size={18} className="text-green-500" title="Aprobado" />
+                        <span title="Aprobado">
+                          <CheckCircle size={18} className="text-green-500" />
+                        </span>
                       ) : (
-                        <XCircle size={18} className="text-yellow-500" title="Pendiente" />
+                        <span title="Pendiente">
+                          <XCircle size={18} className="text-yellow-500" />
+                        </span>
                       )}
                       {testimonial.featured && (
-                        <Star size={18} className="text-yellow-500 fill-yellow-500" title="Destacado" />
+                        <span title="Destacado">
+                          <Star size={18} className="text-yellow-500 fill-yellow-500" />
+                        </span>
                       )}
                     </div>
                     <p className="text-muted-foreground text-sm mb-3">{testimonial.content}</p>
