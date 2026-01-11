@@ -33,8 +33,7 @@ export function HomeSchedulePreview() {
         setLocations(data.slice(0, 3))
         setIsLoading(false)
       })
-      .catch((err) => {
-        console.error("[v0] Error loading locations:", err)
+      .catch(() => {
         setIsLoading(false)
       })
   }, [])

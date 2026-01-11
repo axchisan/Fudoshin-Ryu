@@ -38,7 +38,6 @@ export function ScheduleSection() {
       const data = await res.json()
       setLocations(data.locations || [])
     } catch (error) {
-      console.error("[v0] Error fetching locations:", error)
     } finally {
       setIsLoading(false)
     }

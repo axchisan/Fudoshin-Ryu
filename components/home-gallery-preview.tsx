@@ -25,8 +25,7 @@ export function HomeGalleryPreview() {
         setImages((data.images || []).slice(0, 6))
         setIsLoading(false)
       })
-      .catch((err) => {
-        console.error("[v0] Error loading gallery:", err)
+      .catch(() => {
         setIsLoading(false)
       })
   }, [])

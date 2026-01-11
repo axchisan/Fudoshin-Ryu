@@ -1,6 +1,8 @@
 import { db } from "@/lib/db"
 import { NextResponse } from "next/server"
 
+export const revalidate = 600
+
 export async function GET() {
   try {
     const schedules = await db.schedule.findMany({
@@ -12,7 +14,9 @@ export async function GET() {
 
     return NextResponse.json({ schedules })
   } catch (error) {
-    console.error("[v0] Error fetching schedules:", error)
+    if (process.env.NODE_ENV === "production") {
+      console.error("Error fetching schedules:", error)
+    }
     return NextResponse.json({ schedules: [] })
   }
 }

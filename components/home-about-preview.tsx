@@ -20,7 +20,7 @@ export function HomeAboutPreview() {
     fetch("/api/site/settings")
       .then((res) => res.json())
       .then((data) => setSettings(data))
-      .catch((err) => console.error("[v0] Error loading settings:", err))
+      .catch(() => {})
   }, [])
 
   if (!settings) {

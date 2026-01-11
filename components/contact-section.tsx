@@ -35,9 +35,7 @@ export function ContactSection() {
       const res = await fetch("/api/site/settings")
       const data = await res.json()
       setSettings(data.settings)
-    } catch (error) {
-      console.error("[v0] Error fetching settings:", error)
-    }
+    } catch (error) {}
   }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -64,7 +62,6 @@ export function ContactSection() {
         setTimeout(() => setSubmitted(false), 5000)
       }
     } catch (error) {
-      console.error("[v0] Error sending message:", error)
     } finally {
       setIsSubmitting(false)
     }

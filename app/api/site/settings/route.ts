@@ -1,6 +1,8 @@
 import { db } from "@/lib/db"
 import { NextResponse } from "next/server"
 
+export const revalidate = 600
+
 export async function GET() {
   try {
     let settings = await db.siteSettings.findFirst()
@@ -20,7 +22,9 @@ export async function GET() {
 
     return NextResponse.json(settings)
   } catch (error) {
-    console.error("[v0] Error fetching site settings:", error)
+    if (process.env.NODE_ENV === "production") {
+      console.error("Error fetching site settings:", error)
+    }
     return NextResponse.json({ error: "Error al obtener configuración" }, { status: 500 })
   }
 }

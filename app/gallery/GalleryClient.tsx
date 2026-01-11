@@ -34,7 +34,6 @@ export function GalleryClient() {
       const data = await res.json()
       setAllImages(data.images || [])
     } catch (error) {
-      console.error("[v0] Error fetching gallery images:", error)
     } finally {
       setIsLoading(false)
     }

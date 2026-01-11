@@ -11,6 +11,8 @@ export const metadata = {
   description: "Clases disponibles en Vélez, Barbosa y Guavatá, Santander",
 }
 
+export const revalidate = 600
+
 const DAYS = ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"]
 
 async function getScheduleData() {
@@ -26,7 +28,9 @@ async function getScheduleData() {
 
     return locations
   } catch (error) {
-    console.error("[v0] Error fetching schedule data:", error)
+    if (process.env.NODE_ENV === "production") {
+      console.error("Error fetching schedule data:", error)
+    }
     return []
   }
 }

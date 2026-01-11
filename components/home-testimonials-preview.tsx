@@ -25,8 +25,7 @@ export function HomeTestimonialsPreview() {
         setTestimonials(data.slice(0, 4))
         setIsLoading(false)
       })
-      .catch((err) => {
-        console.error("[v0] Error loading testimonials:", err)
+      .catch(() => {
         setIsLoading(false)
       })
   }, [])

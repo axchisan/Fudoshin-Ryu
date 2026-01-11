@@ -1,6 +1,8 @@
 import { db } from "@/lib/db"
 import { NextResponse } from "next/server"
 
+export const revalidate = 300
+
 export async function GET() {
   try {
     const testimonials = await db.testimonial.findMany({
@@ -20,7 +22,9 @@ export async function GET() {
 
     return NextResponse.json(testimonials)
   } catch (error) {
-    console.error("[v0] Error fetching testimonials:", error)
+    if (process.env.NODE_ENV === "production") {
+      console.error("Error fetching testimonials:", error)
+    }
     return NextResponse.json({ error: "Error al obtener testimonios" }, { status: 500 })
   }
 }

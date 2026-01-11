@@ -12,12 +12,16 @@ export const metadata = {
   description: "Conoce al Sensei Leonardo Vanegas Martínez y la filosofía de Fudoshin Ryu",
 }
 
+export const revalidate = 600
+
 async function getSiteSettings() {
   try {
     const settings = await db.siteSettings.findFirst()
     return settings
   } catch (error) {
-    console.error("[v0] Error fetching site settings:", error)
+    if (process.env.NODE_ENV === "production") {
+      console.error("Error fetching site settings:", error)
+    }
     return null
   }
 }

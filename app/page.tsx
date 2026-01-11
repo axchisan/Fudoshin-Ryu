@@ -1,4 +1,3 @@
-// Home page - Enhanced with full content sections
 import { Navbar } from "@/components/navbar"
 import { HeroSection } from "@/components/hero-section"
 import { HomeAboutPreview } from "@/components/home-about-preview"
@@ -12,6 +11,8 @@ export const metadata = {
   title: "Fudoshin Ryu - Inicio",
   description: "Bienvenido a Fudoshin Ryu, escuela de Shotokan Karate-Do tradicional JKA en Vélez, Santander",
 }
+
+export const revalidate = 180
 
 export default function Home() {
   return (

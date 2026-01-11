@@ -1,6 +1,8 @@
 import { db } from "@/lib/db"
 import { NextResponse } from "next/server"
 
+export const revalidate = 300
+
 export async function GET() {
   try {
     const images = await db.galleryImage.findMany({
@@ -10,7 +12,9 @@ export async function GET() {
 
     return NextResponse.json({ images })
   } catch (error) {
-    console.error("[v0] Error fetching gallery:", error)
+    if (process.env.NODE_ENV === "production") {
+      console.error("Error fetching gallery:", error)
+    }
     return NextResponse.json({ error: "Error al obtener galería" }, { status: 500 })
   }
 }

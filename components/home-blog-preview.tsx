@@ -26,8 +26,7 @@ export function HomeBlogPreview() {
         setPosts(data.slice(0, 3))
         setIsLoading(false)
       })
-      .catch((err) => {
-        console.error("[v0] Error loading blog posts:", err)
+      .catch(() => {
         setIsLoading(false)
       })
   }, [])

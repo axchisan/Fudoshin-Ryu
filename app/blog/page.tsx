@@ -14,6 +14,8 @@ export async function generateMetadata(): Promise<Metadata> {
   }
 }
 
+export const revalidate = 300
+
 async function getBlogPosts() {
   try {
     const posts = await db.blogPost.findMany({
@@ -31,7 +33,9 @@ async function getBlogPosts() {
     })
     return posts
   } catch (error) {
-    console.error("[v0] Error fetching blog posts:", error)
+    if (process.env.NODE_ENV === "production") {
+      console.error("Error fetching blog posts:", error)
+    }
     return []
   }
 }
