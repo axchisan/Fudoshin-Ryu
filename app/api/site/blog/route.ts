@@ -11,6 +11,7 @@ export async function GET() {
         title: true,
         slug: true,
         excerpt: true,
+        image_url: true,
         createdAt: true,
       },
     })

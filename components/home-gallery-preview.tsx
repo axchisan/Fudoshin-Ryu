@@ -11,6 +11,7 @@ interface GalleryImage {
   title: string
   image_url: string
   category: string | null
+  alt_text: string | null
 }
 
 export function HomeGalleryPreview() {
@@ -21,7 +22,7 @@ export function HomeGalleryPreview() {
     fetch("/api/site/gallery")
       .then((res) => res.json())
       .then((data) => {
-        setImages(data.slice(0, 3))
+        setImages((data.images || []).slice(0, 6))
         setIsLoading(false)
       })
       .catch((err) => {
@@ -79,7 +80,7 @@ export function HomeGalleryPreview() {
             >
               <Image
                 src={item.image_url || "/placeholder.svg?height=400&width=400"}
-                alt={item.title}
+                alt={item.alt_text || item.title}
                 fill
                 className="object-cover group-hover:scale-110 transition-all duration-500"
               />

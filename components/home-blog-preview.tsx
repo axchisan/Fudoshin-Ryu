@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion"
 import Link from "next/link"
+import Image from "next/image"
 import { ArrowRight, CalendarDays } from "lucide-react"
 import { useEffect, useState } from "react"
 
@@ -10,6 +11,7 @@ interface BlogPost {
   title: string
   slug: string
   excerpt: string
+  image_url: string | null
   createdAt: string
 }
 
@@ -75,24 +77,32 @@ export function HomeBlogPreview() {
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: idx * 0.1 }}
               viewport={{ once: true }}
-              className="bg-background border border-red-600/30 rounded-softer p-6 hover:shadow-xl hover:shadow-red-600/20 transition-all duration-500 flex flex-col"
+              className="bg-background border border-red-600/30 rounded-softer overflow-hidden hover:shadow-xl hover:shadow-red-600/20 transition-all duration-500 flex flex-col"
             >
-              <div className="flex items-center gap-2 text-muted-foreground text-sm mb-3">
-                <CalendarDays size={16} />
-                <time>{new Date(post.createdAt).toLocaleDateString("es-ES")}</time>
+              {post.image_url && (
+                <Link href={`/blog/${post.slug}`} className="relative h-48 w-full">
+                  <Image src={post.image_url || "/placeholder.svg"} alt={post.title} fill className="object-cover" />
+                </Link>
+              )}
+
+              <div className="p-6 flex flex-col flex-grow">
+                <div className="flex items-center gap-2 text-muted-foreground text-sm mb-3">
+                  <CalendarDays size={16} />
+                  <time>{new Date(post.createdAt).toLocaleDateString("es-ES")}</time>
+                </div>
+
+                <h3 className="text-xl font-bold text-foreground mb-3 line-clamp-2">{post.title}</h3>
+                <p className="text-muted-foreground text-sm leading-relaxed mb-4 flex-grow line-clamp-3">
+                  {post.excerpt}
+                </p>
+
+                <Link
+                  href={`/blog/${post.slug}`}
+                  className="text-red-600 font-semibold hover:text-red-700 transition-all duration-500 flex items-center gap-2"
+                >
+                  Leer más <ArrowRight size={16} />
+                </Link>
               </div>
-
-              <h3 className="text-xl font-bold text-foreground mb-3 line-clamp-2">{post.title}</h3>
-              <p className="text-muted-foreground text-sm leading-relaxed mb-4 flex-grow line-clamp-3">
-                {post.excerpt}
-              </p>
-
-              <Link
-                href={`/blog/${post.slug}`}
-                className="text-red-600 font-semibold hover:text-red-700 transition-all duration-500 flex items-center gap-2"
-              >
-                Leer más <ArrowRight size={16} />
-              </Link>
             </motion.article>
           ))}
         </div>

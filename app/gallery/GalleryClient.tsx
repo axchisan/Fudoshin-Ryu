@@ -14,10 +14,12 @@ interface GalleryImage {
   category: string
   image_url: string
   description: string | null
+  alt_text: string | null
+  date_taken: string | null
 }
 
 export function GalleryClient() {
-  const [images, setImages] = useState<GalleryImage[]>([])
+  const [allImages, setAllImages] = useState<GalleryImage[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [selectedImage, setSelectedImage] = useState<GalleryImage | null>(null)
   const [filter, setFilter] = useState("Todas")
@@ -30,7 +32,7 @@ export function GalleryClient() {
     try {
       const res = await fetch("/api/site/gallery")
       const data = await res.json()
-      setImages(data.images || [])
+      setAllImages(data.images || [])
     } catch (error) {
       console.error("[v0] Error fetching gallery images:", error)
     } finally {
@@ -38,9 +40,8 @@ export function GalleryClient() {
     }
   }
 
-  // Extract unique categories from images
-  const categories = ["Todas", ...Array.from(new Set(images.map((img) => img.category)))]
-  const filtered = filter === "Todas" ? images : images.filter((img) => img.category === filter)
+  const categories = ["Todas", ...Array.from(new Set(allImages.map((img) => img.category)))]
+  const filtered = filter === "Todas" ? allImages : allImages.filter((img) => img.category === filter)
 
   return (
     <>
@@ -60,7 +61,7 @@ export function GalleryClient() {
               <div className="flex items-center justify-center py-12">
                 <Loader2 size={48} className="animate-spin text-red-600" />
               </div>
-            ) : images.length === 0 ? (
+            ) : allImages.length === 0 ? (
               <div className="text-center py-12 bg-card border border-border rounded-lg">
                 <p className="text-muted-foreground">No hay imágenes disponibles en este momento</p>
               </div>
@@ -99,7 +100,7 @@ export function GalleryClient() {
                           <div className="relative aspect-square bg-card">
                             <Image
                               src={image.image_url || "/placeholder.svg"}
-                              alt={image.title}
+                              alt={image.alt_text || image.title}
                               fill
                               className="object-cover group-hover:scale-110 transition duration-300"
                             />
@@ -140,7 +141,7 @@ export function GalleryClient() {
             <div className="relative w-full aspect-square mb-4">
               <Image
                 src={selectedImage.image_url || "/placeholder.svg"}
-                alt={selectedImage.title}
+                alt={selectedImage.alt_text || selectedImage.title}
                 fill
                 className="object-contain"
               />
@@ -149,6 +150,11 @@ export function GalleryClient() {
               <h3 className="text-2xl font-bold mb-2">{selectedImage.title}</h3>
               <p className="text-gray-300 mb-2">{selectedImage.category}</p>
               {selectedImage.description && <p className="text-gray-400 text-sm">{selectedImage.description}</p>}
+              {selectedImage.date_taken && (
+                <p className="text-gray-500 text-xs mt-2">
+                  {new Date(selectedImage.date_taken).toLocaleDateString("es-ES")}
+                </p>
+              )}
             </div>
           </div>
         </div>

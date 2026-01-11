@@ -2,12 +2,26 @@
 
 import Link from "next/link"
 import Image from "next/image"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Menu, X } from "lucide-react"
 import { ThemeToggle } from "./theme-toggle"
 
 export function Navbar() {
   const [isOpen, setIsOpen] = useState(false)
+  const [isAdminAuth, setIsAdminAuth] = useState(false)
+
+  useEffect(() => {
+    checkAdminAuth()
+  }, [])
+
+  const checkAdminAuth = async () => {
+    try {
+      const res = await fetch("/api/admin/auth/me")
+      setIsAdminAuth(res.ok)
+    } catch {
+      setIsAdminAuth(false)
+    }
+  }
 
   return (
     <nav className="fixed top-0 z-50 w-full bg-background/95 backdrop-blur-md border-b border-red-600/20 shadow-sm">
@@ -40,7 +54,7 @@ export function Navbar() {
             </Link>
             <ThemeToggle />
             <Link
-              href="/admin/login"
+              href={isAdminAuth ? "/admin/dashboard" : "/admin/login"}
               className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-all duration-500 font-medium active:scale-95"
             >
               Admin
@@ -76,7 +90,7 @@ export function Navbar() {
                 Contacto
               </Link>
               <Link
-                href="/admin/login"
+                href={isAdminAuth ? "/admin/dashboard" : "/admin/login"}
                 className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-all duration-500 font-medium text-center active:scale-95"
               >
                 Admin

@@ -4,6 +4,7 @@ import { motion } from "framer-motion"
 import { Clock, MapPin, ArrowRight } from "lucide-react"
 import Link from "next/link"
 import { useEffect, useState } from "react"
+import { formatTime12Hour } from "@/lib/utils"
 
 interface Schedule {
   day_of_week: number
@@ -98,7 +99,7 @@ export function HomeSchedulePreview() {
                     <div className="flex items-center gap-2 text-red-600 mt-1">
                       <Clock size={14} />
                       <p>
-                        {sched.start_time} - {sched.end_time}
+                        {formatTime12Hour(sched.start_time)} - {formatTime12Hour(sched.end_time)}
                       </p>
                     </div>
                     <p className="text-muted-foreground text-xs mt-1">{sched.level}</p>

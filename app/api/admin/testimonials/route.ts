@@ -1,51 +1,56 @@
-import { verifyToken } from "@/lib/auth"
+import { db } from "@/lib/db"
+import { getAdminSession } from "@/lib/auth-helpers"
+import { NextResponse } from "next/server"
 
-const testimonials: any[] = [
-  {
-    id: "1",
-    author: "Juan Pérez",
-    belt_level: "Cinturón Naranja",
-    content: "Excelente experiencia en Fudoshin Ryu...",
-  },
-]
+export async function GET() {
+  try {
+    const session = await getAdminSession()
 
-export async function GET(request: Request) {
-  const token = request.headers.get("Authorization")?.split(" ")[1]
+    if (!session) {
+      return NextResponse.json({ error: "No autorizado" }, { status: 401 })
+    }
 
-  if (!token || !verifyToken(token)) {
-    return Response.json({ error: "Unauthorized" }, { status: 401 })
+    const testimonials = await db.testimonial.findMany({
+      orderBy: [{ featured: "desc" }, { createdAt: "desc" }],
+    })
+
+    return NextResponse.json(testimonials)
+  } catch (error) {
+    console.error("[v0] Testimonials GET error:", error)
+    return NextResponse.json({ error: "Error al obtener testimonios" }, { status: 500 })
   }
-
-  return Response.json(testimonials)
 }
 
 export async function POST(request: Request) {
-  const token = request.headers.get("Authorization")?.split(" ")[1]
+  try {
+    const session = await getAdminSession()
 
-  if (!token || !verifyToken(token)) {
-    return Response.json({ error: "Unauthorized" }, { status: 401 })
+    if (!session) {
+      return NextResponse.json({ error: "No autorizado" }, { status: 401 })
+    }
+
+    const body = await request.json()
+    const { name, level, content, rating, image_url, approved, featured } = body
+
+    if (!name || !content || !level) {
+      return NextResponse.json({ error: "Faltan campos requeridos" }, { status: 400 })
+    }
+
+    const testimonial = await db.testimonial.create({
+      data: {
+        name,
+        level,
+        content,
+        rating: rating || 5,
+        image_url,
+        approved: approved !== false,
+        featured: featured || false,
+      },
+    })
+
+    return NextResponse.json(testimonial)
+  } catch (error) {
+    console.error("[v0] Testimonials POST error:", error)
+    return NextResponse.json({ error: "Error al crear testimonio" }, { status: 500 })
   }
-
-  const testimonial = await request.json()
-  testimonial.id = Date.now().toString()
-  testimonials.push(testimonial)
-
-  return Response.json({ success: true })
-}
-
-export async function PUT(request: Request) {
-  const token = request.headers.get("Authorization")?.split(" ")[1]
-
-  if (!token || !verifyToken(token)) {
-    return Response.json({ error: "Unauthorized" }, { status: 401 })
-  }
-
-  const testimonial = await request.json()
-  const index = testimonials.findIndex((t) => t.id === testimonial.id)
-
-  if (index !== -1) {
-    testimonials[index] = testimonial
-  }
-
-  return Response.json({ success: true })
 }

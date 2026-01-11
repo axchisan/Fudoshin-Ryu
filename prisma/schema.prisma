@@ -51,12 +51,20 @@ model SiteSettings {
   sensei_name       String   @default("Leonardo Vanegas Martínez")
   sensei_bio        String   @default("Maestro de Karate Shotokan con más de 20 años de experiencia")
   sensei_image_url  String?
+  sensei_rank       String?  @default("5to Dan")
+  sensei_experience_years Int? @default(20)
+  sensei_specialties String? @default("Kata, Kumite, Bunkai")
+  sensei_achievements String? // Logros y certificaciones
   
   // Dojo Info
   dojo_name         String   @default("Fudoshin Ryu")
   dojo_philosophy   String   @default("Cultivar la fuerza del espíritu, honor en la tradición, disciplina en la práctica")
   dojo_motto        String   @default("Fuerza • Honor • Disciplina")
   jka_affiliation   String   @default("Afiliado a Japan Karate Association (JKA)")
+  dojo_founded_year Int?     @default(2010)
+  dojo_description  String?  @default("Escuela de Karate Shotokan tradicional JKA")
+  dojo_mission      String?
+  dojo_vision       String?
   
   // Contact
   phone             String?
@@ -167,6 +175,9 @@ model GalleryImage {
   category  String     @default("General") // "Clases", "Torneos", "Graduaciones", "Eventos", "General"
   alt_text  String?    // Accessibility alt text
   tags      String?    // Comma-separated tags for filtering
+  date_taken DateTime?  @default(now())
+  photographer String?
+  location  String?
   
   order     Int        @default(0)
   published Boolean    @default(true)
@@ -189,11 +200,17 @@ model Testimonial {
   rating    Int        @default(5) // 1-5 stars
   content   String
   image_url String?
+  email     String?
+  response  String?    // Respuesta del sensei al testimonio
+  responded_at DateTime?
   
   approved  Boolean    @default(false)
+  featured  Boolean    @default(false) // Destacado en página principal
   createdAt DateTime   @default(now())
   updatedAt DateTime   @updatedAt
   
+  @@index([approved])
+  @@index([featured])
   @@map("testimonials")
 }
 

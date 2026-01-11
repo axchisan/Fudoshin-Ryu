@@ -4,6 +4,7 @@ import { ScrollReveal } from "@/components/scroll-reveal"
 import { BackButton } from "@/components/back-button"
 import { db } from "@/lib/db"
 import { MapPin, Clock } from "lucide-react"
+import { formatTime12Hour } from "@/lib/utils"
 
 export const metadata = {
   title: "Horarios - Fudoshin Ryu",
@@ -137,7 +138,7 @@ function LocationCard({
                   <div className="flex-1">
                     <p className="font-bold text-foreground">{DAYS[schedule.day_of_week]}</p>
                     <p className="text-sm text-muted-foreground">
-                      {schedule.start_time} - {schedule.end_time}
+                      {formatTime12Hour(schedule.start_time)} - {formatTime12Hour(schedule.end_time)}
                     </p>
                     {schedule.description && (
                       <p className="text-xs text-muted-foreground mt-1">{schedule.description}</p>

@@ -33,8 +33,7 @@ export default function AdminLogin() {
         return
       }
 
-      router.push("/admin/dashboard")
-      router.refresh()
+      window.location.href = "/admin/dashboard"
     } catch (err) {
       setError("Error al conectar con el servidor")
       console.error(err)

@@ -3,17 +3,26 @@
 import type React from "react"
 
 import { useEffect, useState } from "react"
-import { Loader2, Save, User, Building2, Phone, Instagram, Upload } from "lucide-react"
+import { Loader2, Save, User, Building2, Phone, Instagram } from "lucide-react"
 import { AdminHeader } from "@/components/admin-header"
+import { BlogImageUpload } from "@/components/blog-image-upload"
 
 interface SiteSettings {
   sensei_name: string
   sensei_bio: string
   sensei_image_url?: string
+  sensei_rank?: string
+  sensei_experience_years?: number
+  sensei_specialties?: string
+  sensei_achievements?: string
   dojo_name: string
   dojo_philosophy: string
   dojo_motto: string
   jka_affiliation: string
+  dojo_founded_year?: number
+  dojo_description?: string
+  dojo_mission?: string
+  dojo_vision?: string
   phone?: string
   whatsapp?: string
   email?: string
@@ -67,7 +76,7 @@ export default function SettingsPage() {
     }
   }
 
-  const handleChange = (field: keyof SiteSettings, value: string) => {
+  const handleChange = (field: keyof SiteSettings, value: string | number) => {
     setSettings((prev) => (prev ? { ...prev, [field]: value } : null))
   }
 
@@ -113,6 +122,41 @@ export default function SettingsPage() {
                   />
                 </div>
 
+                <div className="grid md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-foreground font-bold mb-2">Rango/Dan</label>
+                    <input
+                      type="text"
+                      value={settings.sensei_rank || ""}
+                      onChange={(e) => handleChange("sensei_rank", e.target.value)}
+                      className="w-full bg-background border border-red-600 text-foreground px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-600"
+                      placeholder="5to Dan"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-foreground font-bold mb-2">Años de experiencia</label>
+                    <input
+                      type="number"
+                      value={settings.sensei_experience_years || ""}
+                      onChange={(e) => handleChange("sensei_experience_years", Number.parseInt(e.target.value))}
+                      className="w-full bg-background border border-red-600 text-foreground px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-600"
+                      placeholder="20"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-foreground font-bold mb-2">Especialidades</label>
+                  <input
+                    type="text"
+                    value={settings.sensei_specialties || ""}
+                    onChange={(e) => handleChange("sensei_specialties", e.target.value)}
+                    className="w-full bg-background border border-red-600 text-foreground px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-600"
+                    placeholder="Kata, Kumite, Bunkai"
+                  />
+                </div>
+
                 <div>
                   <label className="block text-foreground font-bold mb-2">Biografía</label>
                   <textarea
@@ -125,20 +169,23 @@ export default function SettingsPage() {
                 </div>
 
                 <div>
-                  <label className="block text-foreground font-bold mb-2">
-                    <Upload size={16} className="inline mr-2" />
-                    URL de la foto del sensei
-                  </label>
-                  <input
-                    type="url"
-                    value={settings.sensei_image_url || ""}
-                    onChange={(e) => handleChange("sensei_image_url", e.target.value)}
+                  <label className="block text-foreground font-bold mb-2">Logros y Certificaciones</label>
+                  <textarea
+                    value={settings.sensei_achievements || ""}
+                    onChange={(e) => handleChange("sensei_achievements", e.target.value)}
+                    rows={4}
                     className="w-full bg-background border border-red-600 text-foreground px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-600"
-                    placeholder="https://example.com/sensei-photo.jpg"
+                    placeholder="Torneos ganados, certificaciones, reconocimientos..."
                   />
-                  <p className="text-sm text-muted-foreground mt-2">
-                    Esta foto se mostrará en la página principal del sitio
-                  </p>
+                </div>
+
+                <div>
+                  <label className="block text-foreground font-bold mb-2 mb-2">Foto del Sensei</label>
+                  <BlogImageUpload
+                    currentImageUrl={settings.sensei_image_url}
+                    onImageChange={(url) => handleChange("sensei_image_url", url)}
+                  />
+                  <p className="text-sm text-muted-foreground mt-2">Esta foto se mostrará en las páginas del sitio</p>
                 </div>
               </div>
             </div>
@@ -151,14 +198,38 @@ export default function SettingsPage() {
               </div>
 
               <div className="space-y-4">
+                <div className="grid md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-foreground font-bold mb-2">Nombre del Dojo</label>
+                    <input
+                      type="text"
+                      value={settings.dojo_name}
+                      onChange={(e) => handleChange("dojo_name", e.target.value)}
+                      className="w-full bg-background border border-red-600 text-foreground px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-600"
+                      placeholder="Fudoshin Ryu"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-foreground font-bold mb-2">Año de fundación</label>
+                    <input
+                      type="number"
+                      value={settings.dojo_founded_year || ""}
+                      onChange={(e) => handleChange("dojo_founded_year", Number.parseInt(e.target.value))}
+                      className="w-full bg-background border border-red-600 text-foreground px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-600"
+                      placeholder="2010"
+                    />
+                  </div>
+                </div>
+
                 <div>
-                  <label className="block text-foreground font-bold mb-2">Nombre del Dojo</label>
+                  <label className="block text-foreground font-bold mb-2">Descripción breve</label>
                   <input
                     type="text"
-                    value={settings.dojo_name}
-                    onChange={(e) => handleChange("dojo_name", e.target.value)}
+                    value={settings.dojo_description || ""}
+                    onChange={(e) => handleChange("dojo_description", e.target.value)}
                     className="w-full bg-background border border-red-600 text-foreground px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-600"
-                    placeholder="Fudoshin Ryu"
+                    placeholder="Escuela de Karate Shotokan tradicional JKA"
                   />
                 </div>
 
@@ -181,6 +252,29 @@ export default function SettingsPage() {
                     onChange={(e) => handleChange("dojo_motto", e.target.value)}
                     className="w-full bg-background border border-red-600 text-foreground px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-600"
                     placeholder="Fuerza • Honor • Disciplina"
+                  />
+                  <p className="text-sm text-muted-foreground mt-2">Separa valores con el símbolo •</p>
+                </div>
+
+                <div>
+                  <label className="block text-foreground font-bold mb-2">Misión</label>
+                  <textarea
+                    value={settings.dojo_mission || ""}
+                    onChange={(e) => handleChange("dojo_mission", e.target.value)}
+                    rows={3}
+                    className="w-full bg-background border border-red-600 text-foreground px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-600"
+                    placeholder="La misión del dojo..."
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-foreground font-bold mb-2">Visión</label>
+                  <textarea
+                    value={settings.dojo_vision || ""}
+                    onChange={(e) => handleChange("dojo_vision", e.target.value)}
+                    rows={3}
+                    className="w-full bg-background border border-red-600 text-foreground px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-600"
+                    placeholder="La visión del dojo..."
                   />
                 </div>
 

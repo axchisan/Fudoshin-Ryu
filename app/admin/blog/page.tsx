@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import AdminLayout from "@/components/admin-layout"
+import { BlogImageUpload } from "@/components/blog-image-upload"
 import { Loader2, Edit, Trash2, Eye, EyeOff } from "lucide-react"
 
 interface BlogPost {
@@ -160,6 +161,7 @@ export default function BlogPage() {
               slug: "",
               excerpt: "",
               content: "",
+              image_url: "",
               author: "Sensei Leonardo Vanegas",
               published: false,
             })
@@ -223,13 +225,10 @@ export default function BlogPage() {
             </div>
 
             <div>
-              <label className="block text-foreground font-semibold mb-2">URL de Imagen</label>
-              <input
-                type="text"
-                value={editing.image_url || ""}
-                onChange={(e) => setEditing({ ...editing, image_url: e.target.value })}
-                className="w-full bg-background border border-border text-foreground px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-600"
-                placeholder="/images/blog/mi-imagen.jpg"
+              <label className="block text-foreground font-semibold mb-2">Imagen del Blog (Opcional)</label>
+              <BlogImageUpload
+                currentImageUrl={editing.image_url}
+                onImageChange={(url) => setEditing({ ...editing, image_url: url })}
               />
             </div>
 
@@ -302,6 +301,7 @@ export default function BlogPage() {
                     <p className="text-xs text-muted-foreground">
                       Por {post.author} • {new Date(post.createdAt).toLocaleDateString("es-ES")}
                     </p>
+                    {post.image_url && <p className="text-xs text-green-600 mt-1">Con imagen</p>}
                   </div>
                   <div className="flex gap-2">
                     <button
