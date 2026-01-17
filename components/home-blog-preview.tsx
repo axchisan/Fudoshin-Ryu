@@ -5,6 +5,7 @@ import Link from "next/link"
 import Image from "next/image"
 import { ArrowRight, CalendarDays } from "lucide-react"
 import { useEffect, useState } from "react"
+import { safeFormatDate } from "@/lib/utils"
 
 interface BlogPost {
   id: string
@@ -23,7 +24,8 @@ export function HomeBlogPreview() {
     fetch("/api/site/blog")
       .then((res) => res.json())
       .then((data) => {
-        setPosts(data.slice(0, 3))
+        const validPosts = Array.isArray(data) ? data.filter((p: BlogPost) => p && p.id && p.title) : []
+        setPosts(validPosts.slice(0, 3))
         setIsLoading(false)
       })
       .catch(() => {
@@ -87,7 +89,7 @@ export function HomeBlogPreview() {
               <div className="p-6 flex flex-col flex-grow">
                 <div className="flex items-center gap-2 text-muted-foreground text-sm mb-3">
                   <CalendarDays size={16} />
-                  <time>{new Date(post.createdAt).toLocaleDateString("es-ES")}</time>
+                  <time>{safeFormatDate(post.createdAt) || "Fecha no disponible"}</time>
                 </div>
 
                 <h3 className="text-xl font-bold text-foreground mb-3 line-clamp-2">{post.title}</h3>

@@ -6,6 +6,7 @@ import Image from "next/image"
 import AdminLayout from "@/components/admin-layout"
 import { ImageUpload } from "@/components/image-upload"
 import { X, Loader2, Edit2, Save } from "lucide-react"
+import { safeFormatDate } from "@/lib/utils"
 
 interface GalleryImage {
   id: string
@@ -59,9 +60,10 @@ export default function GalleryPage() {
         return
       }
       const data = await res.json()
-      setImages(data)
+      setImages(Array.isArray(data) ? data : [])
     } catch (err) {
       console.error("[v0] Error fetching images:", err)
+      setImages([])
     } finally {
       setIsLoading(false)
     }
@@ -304,9 +306,7 @@ export default function GalleryPage() {
                             ))}
                           </div>
                         )}
-                        <p className="text-xs text-muted-foreground">
-                          {new Date(image.createdAt).toLocaleDateString("es-ES")}
-                        </p>
+                        <p className="text-xs text-muted-foreground">{safeFormatDate(image.createdAt) || ""}</p>
                       </div>
 
                       {/* Action Buttons */}

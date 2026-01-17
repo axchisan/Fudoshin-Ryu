@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react"
 import { Loader2, Mail, Phone, Calendar, Check, X } from "lucide-react"
 import { AdminHeader } from "@/components/admin-header"
+import { safeFormatDateTime } from "@/lib/utils"
 
 interface ContactMessage {
   id: string
@@ -10,7 +11,7 @@ interface ContactMessage {
   email: string
   phone: string | null
   message: string
-  createdAt: Date
+  createdAt: string // Changed from Date to string for proper handling
   read: boolean
   replied: boolean
 }
@@ -175,7 +176,9 @@ export default function MessagesPage() {
                     <Calendar className="text-red-600" size={18} />
                     <div>
                       <p className="text-muted-foreground text-xs">Fecha</p>
-                      <p className="text-foreground">{new Date(selectedMessage.createdAt).toLocaleString("es-CO")}</p>
+                      <p className="text-foreground">
+                        {safeFormatDateTime(selectedMessage.createdAt) || "Fecha no disponible"}
+                      </p>
                     </div>
                   </div>
                 </div>

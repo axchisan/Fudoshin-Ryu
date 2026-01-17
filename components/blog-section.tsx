@@ -2,6 +2,7 @@
 
 import Link from "next/link"
 import Image from "next/image"
+import { safeFormatDate } from "@/lib/utils"
 
 interface BlogPost {
   id: string
@@ -77,11 +78,11 @@ export function BlogSection({ posts = defaultBlogPosts }: BlogSectionProps) {
               {/* Content */}
               <div className="p-6">
                 <p className="text-red-600 text-sm font-bold mb-2">
-                  {new Date(post.date).toLocaleDateString("es-ES", {
+                  {safeFormatDate(post.date, "es-ES", {
                     year: "numeric",
                     month: "long",
                     day: "numeric",
-                  })}
+                  }) || "Fecha no disponible"}
                 </p>
                 <h3 className="text-xl font-bold text-white mb-3 line-clamp-2">{post.title}</h3>
                 <p className="text-gray-300 text-sm mb-4 line-clamp-3">{post.excerpt}</p>

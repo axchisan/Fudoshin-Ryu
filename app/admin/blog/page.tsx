@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation"
 import AdminLayout from "@/components/admin-layout"
 import { BlogImageUpload } from "@/components/blog-image-upload"
 import { Loader2, Edit, Trash2, Eye, EyeOff } from "lucide-react"
+import { safeFormatDate } from "@/lib/utils"
 
 interface BlogPost {
   id: string
@@ -49,7 +50,7 @@ export default function BlogPage() {
       const res = await fetch("/api/admin/blog")
       if (res.ok) {
         const data = await res.json()
-        setPosts(data)
+        setPosts(Array.isArray(data) ? data : [])
       }
     } catch (err) {
       console.error("[v0] Error fetching posts:", err)
@@ -299,7 +300,7 @@ export default function BlogPage() {
                     </div>
                     <p className="text-muted-foreground text-sm mb-2">{post.excerpt.substring(0, 150)}...</p>
                     <p className="text-xs text-muted-foreground">
-                      Por {post.author} • {new Date(post.createdAt).toLocaleDateString("es-ES")}
+                      Por {post.author} • {safeFormatDate(post.createdAt) || "Fecha no disponible"}
                     </p>
                     {post.image_url && <p className="text-xs text-green-600 mt-1">Con imagen</p>}
                   </div>
